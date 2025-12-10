@@ -1,66 +1,68 @@
 # Background
 
-## What's a microcontroller?
+## Qué es un microcontrolador?
 
-A microcontroller is a *system* on a chip. Whereas your computer is made up of several discrete
-components: a processor, RAM sticks, a hard drive, an ethernet port, etc.; a microcontroller
-has all those components built into a single "chip" or package. This makes it possible to
-build systems with a minimal part count.
+Un microcontrolador es un sistema en un solo chip. Su pc está fabricado en varias piezas de 
+hardware dedicadas como la memoria RAM en módulos, un procesador, un disco duro, un puerto 
+ethernet, varios puertos usb, etc. Un microcontrolador tiene casi todos estos componentes y más 
+dentro de un solo chip. Esto hace posible construir sistemas con el hardware mínimo posible.
 
-## What can you do with a microcontroller?
+## ¿Qué puedes hacer con un microcontrolador?
 
-Lots of things! Microcontrollers are the central part of systems known as *embedded* systems. 
-These systems are everywhere but you don't usually notice them. These systems control the brakes
-of your car, wash your clothes, print your documents, keep you warm, keep you cool, optimize the 
-fuel consumption of your car, etc.
+Casi de todo, y son la parte central de los sistemas embebidos. Estos sistemas están por todas 
+partes, aunque usted no los vea, controlando los frenos de los automóviles, lavar su ropa, imprimir sus
+documentos, mantenerse calentito o fresquito, optimizar el consumo de combustible en su coche, etc.
 
-The main trait of these systems is that they operate without user intervention even if they expose a
-user interface as a washing machine does; most of their operation is done on their own.
+La característica principal de estos sistemas es que pueden operar sin la intervención por parte 
+del usuario, incluso si tienen una interface al usuario como lo hace una lavadora, muchas de sus operaciones
+las hace el microcontrolador por si solo.
 
-The other common trait of these systems is that they *control* a process. And for that these systems
-usually have one or more sensors and one or more actuators. For example, an HVAC system has several
-sensors, thermometers, and humidity sensors spread across some areas, and several actuators as well,
-heating elements and fans connected to ducts.
+Otra de las características comunes de estos sistemas es que los microcontroladores controlan un proceso.
+Suelen tener sensores de entrada al sistema, así  como actuadores de salida del sistema. Un ejemplo es el 
+aire acondicionado, que posee sensores de temperatura y humedad, actuadores como electroválvulas motores y 
+ventiladores, aparte de la interfaz de comunicación mediante un mando a distancia, display en la máquina, etc.
 
-## When should I use a microcontroller?
+## ¿Cuándo debería utilizar un microcontrolador?
 
-All these applications I've mentioned, you can probably implement with a Raspberry Pi, a computer
-that runs Linux. Why should I bother with a microcontroller that operates without an OS? Sounds 
-like it would be harder to develop a program.
+En todas las situaciones que hemos mencionado, posiblemente esté pensando en usar la famosa Raspberry Pi, un 
+completo ordenador que ejecuta el sistema operativo Linux. En esta situación, ¿Por qué usar un microcontrolador
+en vez de la Raspberry Pi?. Parece que es mucho más dificil programar un microcontrolador que una Raspberry Pi.
 
-The main reason is cost. A microcontroller is much cheaper than a general-purpose computer. Not only
-the microcontroller is cheaper; it also requires many fewer external electrical components to operate.
-This makes Printed Circuit Boards (PCBs) smaller and cheaper to design and manufacture.
+La principal razón es el coste. Un microcontrolador es mucho más barato que usar una Raspberry Pi o similar. 
+Pero no solamente los microcontroladores son más baratos, sino que además requieren menos componentes externos. 
+Y por tanto, requieren de una PCB (Printed Circuit Boards) más pequeña para su diseño.
 
-The other big reason is power consumption. A microcontroller consumes orders of magnitude less power
-than a full-blown processor. If your application will run on batteries that makes a huge difference.
+Otras de las razones principales, es su consumo de energía. Un microcontrolador consume menos energía que cualquier
+procesador. Además, si su uso necesita baterías, no lo dude, un microcontrolador consume muy poco.
 
-And last but not least: (hard) *real-time* constraints. Some processes require their controllers to
-respond to some events within some time interval (e.g. a quadcopter/drone hit by a wind gust). If this
-*deadline* is not met, the process could end in catastrophic failure (e.g. the drone crashes to the
-ground). A general-purpose computer running a general-purpose OS has many services running in the 
-background. This makes it hard to guarantee the execution of a program within tight time constraints.
+Por último y no menos importante, procesos en tiempo real muy cortos. Algunos procesos requieren que sean muy 
+rápidos, por ejemplo , el control de un dron para evitar accidentes. Una cpu que controla un sistema con un sistema
+operativo de propósito general, tiene demasiados servicios corriendo en segundo plano, por lo que los tiempos de 
+reacción son mayores que un microcontrolador. Por tanto, esto hace que los procesos en tiempo real sean criticos
+y por tanto deben minimizarse los procesos en segundo plano.
 
-## When should I *not* use a microcontroller?
 
-Where heavy computations are involved. To keep their power consumption low, microcontrollers have very 
-limited computational resources available to them. For example, some microcontrollers don't even have 
-hardware support for floating-point operations. On those devices, performing a simple addition of 
-single-precision numbers can take hundreds of CPU cycles.
+## ¿Cuándo no se debería usar un microcontrolador?
 
-## Why use Rust and not C?
+En aquellas situaciones donde se requiera un proceso de computación muy elevado y pesados. Para mantener
+su consumo reducido, los microcontroladores están muy limitados en cuanto al computo de cpu. Algunos 
+microcontroladores no tienen un hardware para operar con números en coma flotante (FPU). En los dispositivos
+que carecen de FPU les tomaría cientos de ciclos de CPU para hacer cualquier operación con números en coma flotante.
 
-Hopefully, I don't need to convince you here as you are probably familiar with the language 
-differences between Rust and C. One point I do want to bring up is package management. C lacks an 
-official, widely accepted package management solution whereas Rust has Cargo. This makes development 
-*much* easier. And, IMO, easy package management encourages code reuse because libraries can be 
-easily integrated into an application which is also a good thing as libraries get more "battle testing".
+## ¿Porque usar Rust y no C?
 
-## Why should I not use Rust?
+Las diferencias entre los dos lenguajes de programación son evidentes, y espero que si ha llegado hasta aquí, 
+ya conozca Rust y sus bondades. Un punto que quiero mencionar es la gestión de paquetes. C carece de una solución
+oficial y ampliamente aceptada para la gestión de paquetes, mientras que Rust cuenta con Cargo. Esto facilita mucho
+el desarrollo. Y, en mi opinión, una gestión de paquetes sencilla fomenta la reutilización de código, ya que las 
+bibliotecas se pueden integrar fácilmente en una aplicación, lo cual también es positivo, pues las bibliotecas se 
+someten a más pruebas de rendimiento.
 
-Or why should I prefer C over Rust?
+## ¿Por qué no debería utilizar Rust?
 
-The C ecosystem is way more mature. Off the shelf solution for several problems already exist. If you 
-need to control a time-sensitive process, you can grab one of the existing commercial Real-Time Operating 
-Systems (RTOS) out there and solve your problem. There are no commercial, production-grade RTOSes in Rust 
-yet so you would have to either create one yourself or try one of the ones that are in development.
+O ¿ Por qué debería preferir C en vez de Rust?
+
+El ecosistema C tiene una trayectoria más madura. Ya existen soluciones listas para usar para varios problemas. 
+Si necesitas controlar un proceso crítico en tiempo real, puedes usar uno de los sistemas operativos de tiempo real 
+(RTOS) comerciales disponibles y resolver tu problema. Sin embargo, todavía no existen RTOS comerciales de nivel de 
+producción en Rust, por lo que tendrías que crear uno tú mismo o probar alguno de los que están en desarrollo.
