@@ -66,7 +66,7 @@ También necesitará el siguiente hardware para seguir este libro:
 - OPCIONAL. Un módulo Bluetooth HC-05 (con headers). El módulo equivalente HC-06 debería funcionar
   también.
 
-(Como cualquier componente chino, probablemente lo encuentre en [tiendas chinas online][5] [site][6].
+(Como cualquier componente chino, probablemente lo encuentre en [tiendas online][5] [y chinas][6].
 Los suministradores de los Estados Unidos (USA) no suelen tener esto en su stock.)
 
 [5]: http://www.ebay.com/sch/i.html?_nkw=hc-05
