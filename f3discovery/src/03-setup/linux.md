@@ -4,7 +4,7 @@ Se recogen aquí los comandos para este sistema operativo.
 
 ## Paquetes requeridos
 
-### Ubuntu 18.04 / Debian stretch en adelanter
+### Ubuntu 18.04 / Debian stretch en adelante
 
 > **NOTA** `gdb-multiarch` es el comando GDB que utilizará para depurar sus proywctos en ARM Cortex-M
 
