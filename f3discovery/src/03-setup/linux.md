@@ -1,13 +1,12 @@
 # Linux
 
-Here are the installation commands for a few Linux distributions.
+Se recogen aquí los comandos para este sistema operativo.
 
-## REQUIRED packages
+## Paquetes requeridos
 
-### Ubuntu 18.04 or newer / Debian stretch or newer
+### Ubuntu 18.04 / Debian stretch en adelanter
 
-> **NOTE** `gdb-multiarch` is the GDB command you'll use to debug your ARM
-> Cortex-M programs
+> **NOTA** `gdb-multiarch` es el comando GDB que utilizará para depurar sus proywctos en ARM Cortex-M
 
 <!-- Debian stretch -->
 <!-- GDB 7.12 -->
@@ -24,10 +23,9 @@ sudo apt-get install \
   openocd
 ```
 
-### Ubuntu 14.04 and 16.04
+### Ubuntu 14.04 y 16.04
 
-> **NOTE** `arm-none-eabi-gdb` is the GDB command you'll use to debug your ARM
-> Cortex-M programs
+> **NOTA** `arm-none-eabi-gdb` es el coamndo GDB que utilizará para depurar sus proyectos en ARM Cortex-M
 
 <!-- Ubuntu 14.04 -->
 <!-- GDB 7.6 -->
@@ -40,7 +38,9 @@ sudo apt-get install \
   openocd
 ```
 
-### Fedora 23 or newer
+### Fedora 23 en adelante
+
+> **NOTA** `gdb` es el comando que utilizará para depurar sus proyectos en ARM Cortex-M
 
 ``` console
 sudo dnf install \
@@ -51,8 +51,7 @@ sudo dnf install \
 
 ### Arch Linux
 
-> **NOTE** `arm-none-eabi-gdb` is the GDB command you'll use to debug your ARM
-> Cortex-M programs
+> **NOTE** `arm-none-eabi-gdb` es el comando GDB para depurar sus proyectos para ARM Cortex-M
 
 ``` console
 sudo pacman -S \
@@ -61,15 +60,13 @@ sudo pacman -S \
   openocd
 ```
 
-### Other distros
+### Otras distros
 
-> **NOTE** `arm-none-eabi-gdb` is the GDB command you'll use to debug your ARM
-> Cortex-M programs
+> **NOTA** `arm-none-eabi-gdb` es el comando GDB para depurar sus programas para ARM Cortex-M
 
-For distros that don't have packages for [ARM's pre-built
-toolchain](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads),
-download the "Linux 64-bit" file and put its `bin` directory on your path.
-Here's one way to do it:
+Para distros que no tienen paquetes pre-construidos para la arquitectura [ARM-toolchain](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads),
+descargue el archivo "Linux 64-bit" y coloque su directorio `bin` en tu path.
+De la siguiente forma:
 
 ``` console
 mkdir -p ~/local && cd ~/local
@@ -78,14 +75,13 @@ mkdir -p ~/local && cd ~/local
 tar xjf /path/to/downloaded/file/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
 ```
 
-Then, use your editor of choice to append to your `PATH` in the appropriate
-shell init file (e.g. `~/.zshrc` or `~/.bashrc`):
+Elija su editor favorito para añadir su  `PATH` en el archivo de configuración de inicio de su shell (ejemplo: `~/.zshrc` o `~/.bashrc`):
 
 ```
 PATH=$PATH:$HOME/local/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux/bin
 ```
 
-## Optional packages
+## Paquetes opcionales
 
 ### Ubuntu / Debian
 
