@@ -1,6 +1,6 @@
 # macOS
 
-All the tools can be installed using [Homebrew]:
+Todas las herramientas se pueden instalar usando [Homebrew]:
 
 [Homebrew]: http://brew.sh/
 
@@ -12,6 +12,6 @@ $ # Minicom and OpenOCD
 $ brew install minicom openocd
 ```
 
-That's all! Go to the [next section].
+Eso es todo, vayamos a la [siguiente sección].
 
-[next section]: verify.md
+[siguiente sección]: verify.md
