@@ -1,17 +1,13 @@
-# Setting up a development environment
+# Configurando un entorno de desarrollo
 
-Dealing with microcontrollers involves several tools as we'll be dealing with an architecture
-different than your computer's and we'll have to run and debug programs on a "remote" device.
+Para manejar microcontroladores, necesitamos diferentes herramientas para el manejo de los microcontroladores con una arquitectura diferente a su PC y tendremos que ejecutar y depurar programas en un dispositivo remoto.
 
-## Documentation
+## Documentación
 
-Tooling is not everything though. Without documentation it is pretty much impossible to work with
-microcontrollers.
+Las herramientas se complementan con la documentación, sin la cual sería imposible trabajar con microcontroladores.
+Nos referiremos a todos esos documentos a través de este libro:
 
-We'll be referring to all these documents throughout this book:
-
-*HEADS UP* All these links point to PDF files and some of them are hundreds of pages long and
-several MBs in size.
+¡ATENCIÓN! Todos estos enlaces llevan a archivos PDF, algunos de los cuales tienen cientos de páginas y un tamaño de varios MB.
 
 - [STM32F3DISCOVERY User Manual][um]
 - [STM32F303VC Datasheet][ds]
@@ -25,58 +21,56 @@ several MBs in size.
 [rm]: http://www.st.com/resource/en/reference_manual/dm00043574.pdf
 [um]: http://www.st.com/resource/en/user_manual/dm00063382.pdf
 
-\* **NOTE**: Newer (from around 2020/09) Discovery boards may have a different e-compass and gyroscope (see the user manual). 
-As such, much in chapters 14-16 will not work as is. 
-Checkout the github issues like [this][gh-issue-274]. 
+\* **NOTA**: Nunca (desde 2020/09) la placa Discovery ha cambiado de dispositivos para la brújula ni tampoco para el giroscopio (consulte el manual de usuario). Por lo tanto, en los capítulos desde el 14 al 16 no funcionará del todo. Compruebe los [fallos en GitHub][gh-issue-274]. 
 
 [gh-issue-274]: https://github.com/rust-embedded/discovery/issues/274
 
-## Tools
+## Herramientas
 
-We'll use all the tools listed below. Where a minimum version is not specified, any recent version
-should work but we have listed the version we have tested.
+Vamos a utilizar todas las herramientas listadas a continuación:
 
-- Rust 1.31 or a newer toolchain. Chapter [USART](../11-usart/index.html)
-  requires 1.51 or newer.
+- Rust 1.31 o más reciente. El capítulo [USART](../11-usart/index.html)
+  necesita la versión de Rust igual o superior 1.51.
 
-- [`itmdump`] >=0.3.1 (`cargo install itm`). Tested versions: 0.3.1.
+- [`itmdump`] >=0.3.1 (`cargo install itm`). Probada la versión: 0.3.1.
 
-- OpenOCD >=0.8. Tested versions: v0.9.0 and v0.10.0
+- OpenOCD >=0.8. Probadas las versiones: v0.9.0 y v0.10.0
 
-- `arm-none-eabi-gdb`. Version 7.12 or newer highly recommended. Tested versions: 7.10, 7.11,
-  7.12 and 8.1
+- `arm-none-eabi-gdb`. Versión 7.12 o más reciente. Probada las versiones: 7.10, 7.11,
+  7.12 y 8.1
 
-- [`cargo-binutils`]. Version 0.1.4 or newer.
+- [`cargo-binutils`]. Versión 0.1.4 o más reciente.
 
 [`cargo-binutils`]: https://github.com/rust-embedded/cargo-binutils
 
-- `minicom` on Linux and macOS. Tested version: 2.7. Readers report that `picocom` also works but
-  we'll use `minicom` in this text.
+- `minicom` en Linux y macOS. Probada la versión: 2.7. Los lectores reportan que `picocom` también funciona pero
+  usaremos `minicom` en este texto.
 
-- `PuTTY` on Windows.
+- `PuTTY` para Windows.
 
 [`itmdump`]: https://crates.io/crates/itm
 
-If your computer has Bluetooth functionality and you have the Bluetooth module, you can additionally
-install these tools to play with the Bluetooth module. All these are optional:
+Si su PC tiene Bluetooth funcionando y además tiene el módulo Bluetooth, puede instalar estas herramientas para jugar con el módulo Bluetooth que conectaremos al microcontrolador.Todo esto es opcional:
 
-- Linux, only if you don't have a Bluetooth manager application like Blueman.
+- Linux, instalalo solo sin no tienes una aplicación Bluetooth para manejarlo como Blueman.
   - `bluez`
   - `hcitool`
   - `rfcomm`
   - `rfkill`
 
-macOS / OSX / Windows users only need the default bluetooth manager that ships with their OS.
+macOS / OSX / Windows : Estos usuarios solo necesitan el manejado predeterminado de Bluetooth que trae su OS.
 
-Next, follow OS-agnostic installation instructions for a few of the tools:
+A continuación, siga las instrucciones de instalación independientes del sistema operativo para algunas de las herramientas:
 
 ### `rustc` & Cargo
 
-Install rustup by following the instructions at [https://rustup.rs](https://rustup.rs).
+Instale rustup siguiendo las recomendaciones desde [https://rustup.rs](https://rustup.rs). En el momento actual se instala:
 
-If you already have rustup installed double check that you are on the stable
-channel and your stable toolchain is up to date. `rustc -V` should return a date
-newer than the one shown below:
+``` console
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+``` 
+
+Si ya tenías instalado rustup compruebe que está en el canal estable y las herramientas tambíen estables y actualizadas. `rustc -V` debería de devolver una fecha más actualizada que:
 
 ``` console
 $ rustc -V
@@ -90,7 +84,7 @@ rustc 1.31.0 (abe02cefd 2018-12-04)
 cargo install itm
 ```
 
-Verify the version is >=0.3.1
+Comprobar que la versión sea igual o superior a 0.3.1
 ```
 $ itmdump -V
 itmdump 0.3.1
@@ -98,34 +92,53 @@ itmdump 0.3.1
 
 ### `cargo-binutils`
 
-Install `llvm-tools`
+Instala `llvm-tools`
 
 ``` console
 rustup component add llvm-tools
 ```
+Si le dá error de que falta un compilador cc o c, deberá instalar gcc para su distribución:
 
-Install `cargo-binutils`
+Para Fedora:
+
+``` console
+sudo dnf install gcc
+``` 
+
+Para Debian
+
+``` console
+sudo apt install gcc
 ```
+
+En Arch Linux está instalado de forma predeterminada
+
+``` console
+sudo pacman -S gcc
+``` 
+
+Ahora instala `cargo-binutils`
+``` console
 cargo install cargo-binutils
 ```
 
-#### Verify tools are installed
+#### Comprobar que las herramientas están instaladas correctamente
 
-Run the following commands at your terminal
+Ejecute los siguientes comandos en su terminal:
 ``` console
 cargo new test-size
 ```
-```
+``` console
 cd test-size
 ```
-```
+``` console
 cargo run
 ```
-```
+``` console
 cargo size -- --version
 ```
 
-The results should be something like:
+La salida obtenida será algo como esto:
 ```
 ~
 $ cargo new test-size
@@ -151,9 +164,9 @@ LLVM (http://llvm.org/):
   Host CPU: znver2
 ```
 
-### OS specific instructions
+### Instalaciones específicas para cada sistema operativo
 
-Now follow the instructions specific to the OS you are using:
+Siga las intrucciones específicas para el sistema operativo que esté usando:
 
 - [Linux](linux.md)
 - [Windows](windows.md)
