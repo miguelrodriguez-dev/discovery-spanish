@@ -110,56 +110,47 @@ sudo pacman -S \
 
 ## udev rules
 
-These rules let you use USB devices like the F3 and the Serial module without root privilege, i.e.
-`sudo`.
+Las reglas de udev le van a permitir usar la placa de desarrollo Discovery al conectarla a un puerto USB sin tener que utilizar los privilegios de root. Para ello, primero vamos a conectar la placa (conector mini-B al USB central de la placa, maecado como  "USB ST-LINK") y al puerto USB de nuestro PC Linux, y ejecutamos el comando `lsusb`:
 
-Create `99-openocd.rules` in `/etc/udev/rules.d` using the `idVendor` and `idProduct`
-from the `lsusb` output.
-
-For example, connect the STM32F3DISCOVERY to your computer using a USB cable.
-Be sure to connect the cable to the "USB ST-LINK" port, the USB port in the
-center of the edge of the board.
-
-Execute `lsusb`:
 ``` console
 lsusb | grep ST-LINK
 ```
-It should result in something like:
+Debería aparecer algo como esto:
 ```
 $ lsusb | grep ST-LINK
 Bus 003 Device 003: ID 0483:374b STMicroelectronics ST-LINK/V2.1
 ```
-So the `idVendor` is `0483` and `idProduct` is `374b`.
+El `idVendor` es `0483` y el `idProduct` es `374b`.
 
-### Create `/etc/udev/rules.d/99-openocd.rules`:
+### Crear el archivo `/etc/udev/rules.d/99-openocd.rules`:
 ``` console
-sudo vi /etc/udev/rules.d/99-openocd.rules
+sudo nano /etc/udev/rules.d/99-openocd.rules
 ```
-With the contents:
+Añada el contenido siguiente (debe estar vacío si es la primera vez que lo crea):
 ``` text
 # STM32F3DISCOVERY - ST-LINK/V2.1
 ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE:="0666"
 ```
-#### For older devices with OPTIONAL USB <-> FT232 based Serial Module
+#### Para placas más antiguas con el módulo opcional USB <-> FT232 Serial Module
 
-Create `/etc/udev/rules.d/99-ftdi.rules`:
+Crear `/etc/udev/rules.d/99-ftdi.rules`:
 ``` console
-sudo vi /etc/udev/rules.d/99-openocd.rules
+sudo nano /etc/udev/rules.d/99-openocd.rules
 ```
-With the contents:
+Con el siguiente contenido:
 ``` text
 # FT232 - USB <-> Serial Converter
 ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE:="0666"
 ```
 
-### Reload the udev rules with:
+### Recargar las reglas udev con:
 
 ``` console
 sudo udevadm control --reload-rules
 ```
 
-If you had any board plugged to your computer, unplug them and then plug them in again.
+Si tenía la placa conectada al ordenador, desconectela y vuelva a conectarla de nuevo.
 
-Now, go to the [next section].
+Vayamos a la [siguiente sección].
 
-[next section]: verify.md
+[siguiente sección]: verify.md
