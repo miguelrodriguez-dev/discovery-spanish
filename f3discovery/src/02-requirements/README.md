@@ -1,17 +1,17 @@
-# Hardware/knowledge requirements
+# Conocimientos y requerimientos del hardware
+Lo primero es leer este libro para saber cómo Rust realiza las operaciones 
+necesarias para llevar a cabo nuestros proyecto. No necesitas comprender 
+completamente los genéricos, pero sí necesitas saber cómo usar los cierres. 
+También necesitas familiarizarte con las convenciones de la [edición de 2018], 
+en particular con el hecho de que `extern crate` no es necesario en dicha edición.
 
-The primary knowledge requirement to read this book is to know *some* Rust. It's
-hard for me to quantify *some* but at least I can tell you that you don't need
-to fully grok generics but you do need to know how to *use* closures. You also
-need to be familiar with the idioms of the [2018 edition], in particular with
-the fact that `extern crate` is not necessary in the 2018 edition.
+Debe comprender cómo funcionan las representaciones binarias y hexadecimales de
+valores, así como el uso de algunos operadores bit a bit. Por ejemplo, sería útil
+comprender cómo el siguiente programa genera su salida.
 
-[2018 edition]: https://rust-lang-nursery.github.io/edition-guide/
 
-Due to the nature of embedded programming, it will also be extremely helpful to
-understand how binary and hexadecimal representations of values work, as well
-as the use of some bitwise operators. For example, it would be useful to
-understand how the following program produces its output.
+[edición de 2018]: https://rust-lang-nursery.github.io/edition-guide/
+
 
 ```rust
 fn main() {
@@ -25,16 +25,16 @@ fn main() {
 }
 ```
 
-Also, to follow this material you'll need the following hardware:
+También necesitará el siguiente hardware para seguir este libro:
 
-(Some components are optional but recommended)
+(Algunas partes son opcionales pero recomendadas)
 
-- A [STM32F3DISCOVERY] board.
+- Una placa de desarrollo [STM32F3DISCOVERY].
 
 [STM32F3DISCOVERY]: http://www.st.com/en/evaluation-tools/stm32f3discovery.html
 
-(You can purchase this board from "big" [electronics][0] [suppliers][1] or from [e-commerce][2]
-[sites][3])
+(Puedes comprar esta placa en grandes [tiendas electrónicas][0] [almacenes][1] desde [e-commerce][2]
+[tiendas online][3])
 
 [0]: http://www.mouser.com/ProductDetail/STMicroelectronics/STM32F3DISCOVERY
 [1]: http://www.digikey.com/product-detail/en/stmicroelectronics/STM32F3DISCOVERY/497-13192-ND
@@ -45,79 +45,77 @@ Also, to follow this material you'll need the following hardware:
 <img title="STM32F3DISCOVERY" src="../assets/f3.jpg">
 </p>
 
-- OPTIONAL. A **3.3V** USB <-> Serial module. To elaborate: if you have one of
-  the latest revisions of the discovery board (which is usually the case given
-  the first revision was released years ago) then you do *not* need this module
-  because the board includes this functionality on-board. If you have an older
-  revision of the board then you'll need this module for chapters 10 and 11. For
-  completeness, we'll include instructions for using a Serial module. The book
-  will use [this particular model][sparkfun] but you can use any other model as
-  long as it operates at 3.3V. The CH340G module, which you can buy
- from [e-commerce][4] sites works too and it's probably cheaper for you to get.
+- OPCIONAL. Un módulo  **3.3V** USB <-> Serie . Para ser más precisos: si
+  dispone de una de las últimas versiones de la placa de desarrollo (lo cual
+  suele ser habitual, dado que la primera versión se lanzó hace años), no
+  necesita este módulo, ya que la placa incluye esta funcionalidad integrada.
+  Si dispone de una versión anterior, necesitará este módulo para los capítulos
+  10 y 11. Para mayor claridad, incluiremos instrucciones para usar un módulo
+  serie. El libro utilizará [este modelo en particular][sparkfun], pero puede
+  usar cualquier otro que funcione a 3,3 V. El módulo CH340G, que puede adquirir en tiendas
+  online [e-commerce][4], también funciona y probablemente le resulte más económico.
+
 
 [sparkfun]: https://www.sparkfun.com/products/9873
 [4]: https://www.aliexpress.com/wholesale?SearchText=CH340G
 
 <p align="center">
-<img title="A 3.3v USB <-> Serial module" src="../assets/serial.jpg">
+<img title="Un módulo 3.3v USB <-> Serie" src="../assets/serial.jpg">
 </p>
 
-- OPTIONAL. A HC-05 Bluetooth module (with headers!). A HC-06 would work too.
+- OPCIONAL. Un módulo Bluetooth HC-05 (con headers). El módulo equivalente HC-06 debería funcionar
+  también.
 
-(As with other Chinese parts, you pretty much can only find these on [e-commerce][5] [sites][6].
-(US) Electronics suppliers don't usually stock these for some reason)
+(Como cualquier componente chino, probablemente lo encuentre en [tiendas chinas online][5] [site][6].
+Los suministradores de los Estados Unidos (USA) no suelen tener esto en su stock.)
 
 [5]: http://www.ebay.com/sch/i.html?_nkw=hc-05
 [6]: https://www.aliexpress.com/wholesale?SearchText=hc-05
 
 <p align="center">
-<img title="The HC-05 Bluetooth module" src="../assets/bluetooth.jpg">
+<img title="El módulo Bluetooth HC-05" src="../assets/bluetooth.jpg">
 </p>
 
-- Two mini-B USB cables. One is required to make the STM32F3DISCOVERY board work. The other is only
-  required if you have the Serial <-> USB module. Make sure that the cables both
-  support data transfer as some cables only support charging devices.
+- Dos cables mini-B USB. Uno es completamente necesario para hacer que la placa STM32F3DISCOVERY funcione.
+  El otro solo se necesitará si tienes el módulo Serie <-> USB . Asegúrese de tener el cable adecuado par
+  la transferencia de datos, ya que existen estos mismos cables para cargar dispositivos.
 
 <p align="center">
 <img title="mini-B USB cable" src="../assets/usb-cable.jpg">
 </p>
 
-> **NOTE** These are **not** the USB cables that ship with pretty much every Android phone; those
-> are *micro* USB cables. Make sure you have the right thing!
+> **NOTA** Estos cables no son los cables normales que vienen en los cargadores de telérfonos móviles Android;
+> ya que los cables de Android son *micro* USB . Asegúrese de comprar el cable correcto, el mini-B.
 
-- MOSTLY OPTIONAL. 5 female to female, 4 male to female and 1 Male to Male *jumper* (AKA Dupont)
-  wires. You'll *very likely* need one female to female to get ITM working. The other wires are only
-  needed if you'll be using the USB <-> Serial and Bluetooth modules.
+- OPCIONAL. 5 cables con terminales hembra a hembra, 4 cables con terminales macho a hembra y  1 cable Macho
+  a Macho (jumper o también llamado Dupont). Probablemente necesite un cable hembra a hembra para hacer funcionar
+  el ITM. Los otros cables son necesarios si necesita el USB <-> Serial y el módulo Bluetooth. 
 
-(You can get these from electronics [suppliers][7] or from [e-commerce][8] [sites][9])
+(Puedes comprarlo en [tiendas de electrónica][7] o desde [e-commerce][8] [sites][9])
 
 [7]: https://www.adafruit.com/categories/306
 [8]: http://www.ebay.com/sch/i.html?_nkw=dupont+wire
 [9]: https://www.aliexpress.com/wholesale?SearchText=dupont+wire
 
 <p align="center">
-<img title="Jumper wires" src="../assets/jumper-wires.jpg">
+<img title="Cables Jumper" src="../assets/jumper-wires.jpg">
 </p>
 
-> **FAQ**: Wait, why do I need this specific hardware?
+> **FAQ**: ¿Por qué necesito este hardware tan específico?
 
-It makes my life and yours much easier.
+Porque te hace la vida mucho más fácil.
 
-The material is much, much more approachable if we don't have to worry about hardware differences.
-Trust me on this one.
+Este material se aprovecha al 100%, sin tener que preocuparse sobre las diferencias de hardware.
 
-> **FAQ**: Can I follow this material with a different development board?
+> **FAQ**: ¿Puedo seguir este libro con una placa de desarrollo diferente?
 
-Maybe? It depends mainly on two things: your previous experience with microcontrollers and/or
-whether there already exists a high level crate, like the [`f3`], for your development board
-somewhere.
+Depende principalmente de dos cosas: tu experiencia previa con microcontroladores y/o  si exite un crate de alto nivel,
+como el [`f3`], para su placa de desarrollo en alguna parte.
 
 [`f3`]: https://docs.rs/f3
 
-With a different development board, this text would lose most if not all its beginner friendliness
-and "easy to follow"-ness, IMO.
-
-If you have a different development board and you don't consider yourself a total beginner, you are
-better off starting with the [quickstart] project template.
+Con una placa de desarrollo diferente, en mi opinión, este texto perdería casi toda, si no toda, su accesibilidad para 
+principiantes y su facilidad de comprensión. Si tienes una placa de desarrollo diferente y no te consideras un novato en
+esto de los microcontroladores, entonces será mejor que comience con una plantilla [quickstart] para sus proyectos.
 
 [quickstart]: https://rust-embedded.github.io/cortex-m-quickstart/cortex_m_quickstart/
