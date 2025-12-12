@@ -2,15 +2,14 @@
 
 ## `arm-none-eabi-gdb`
 
-ARM provides `.exe` installers for Windows. Grab one from [here][gcc], and follow the instructions.
-Just before the installation process finishes tick/select the "Add path to environment variable"
-option. Then verify that the tools are in your `%PATH%`:
+ARM suministra instaladores con extensión `.exe` para Windows. Descarga uno desde [aquí][gcc] y sigue las instrucciones.
+Justo antes de que finalice la instalación, marca la opción "Añadir ruta a la variable de entorno". Luego, verifica que las herramientas estén en tu `%PATH%`:
 
-Verify gcc is installed:
+Comprueba que gcc está instalado:
 ``` console
 arm-none-eabi-gcc -v
 ```
-The results should be something like:
+La salida obtenida será:
 ```
 (..)
 $ arm-none-eabi-gcc -v
@@ -21,19 +20,15 @@ gcc version 5.4.1 20160919 (release) (..)
 
 ## OpenOCD
 
-There's no official binary release of OpenOCD for Windows but there are unofficial releases
-available [here][openocd]. Grab the 0.10.x zipfile and extract it somewhere in your drive (I
-recommend `C:\OpenOCD` but with the drive letter that makes sense to you) then update your `%PATH%`
-environment variable to include the following path: `C:\OpenOCD\bin` (or the path that you used
-before).
+No existe una versión binaria oficial de OpenOCD para Windows, pero hay versiones no oficiales disponibles [aquí][openocd]. Descarga el archivo zip 0.10.x y extráelo en tu disco duro (recomiendo `C:\OpenOCD`, pero con la letra de unidad que te resulte útil). Luego, actualiza la variable de entorno `%PATH%` para incluir la siguiente ruta: `C:\OpenOCD\bin` (o la ruta que usaste anteriormente).
 
 [openocd]: https://github.com/xpack-dev-tools/openocd-xpack/releases
 
-Verify OpenOCD is installed and in your `%PATH%` with:
+Comprobar que OpenOCD está instalado correctamente con tu `%PATH%`:
 ``` console
 openocd -v
 ```
-The results should be something like:
+La salida deber parecerse a esto:
 ``` console
 $ openocd -v
 Open On-Chip Debugger 0.10.0
@@ -42,17 +37,16 @@ Open On-Chip Debugger 0.10.0
 
 ## PuTTY
 
-Download the latest `putty.exe` from [this site] and place it somewhere in your `%PATH%`.
+Descargue la última versión de `putty.exe` desde [este sitio] y colóquela en algún lugar de su `%PATH%`.
 
-[this site]: http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
+[este sitio]: http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
 
 ## ST-LINK USB driver
 
-You'll also need to install [this USB driver] or OpenOCD won't work. Follow the installer
-instructions and make sure you install the right (32-bit or 64-bit) version of the driver.
+También necesitarás instalar [este controlador USB] o OpenOCD no funcionará. Sigue las instrucciones del instalador y asegúrate de instalar la versión correcta del controlador (32 o 64 bits).
 
-[this USB driver]: http://www.st.com/en/embedded-software/stsw-link009.html
+[este controlador USB]: http://www.st.com/en/embedded-software/stsw-link009.html
 
-That's all! Go to the [next section].
+Eso es todo, vamos a la [siguiente sección].
 
-[next section]: verify.md
+[siguiente sección]: verify.md
