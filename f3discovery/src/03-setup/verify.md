@@ -1,36 +1,32 @@
-# Verify the installation
+# Comprobar la instalación
 
-Let's verify that all the tools were installed correctly.
+Comprobemos que todas las herramientas estan instaladas.
+## Comprobación en Linux 
 
-## Linux only
+### Comprobar los permisos
 
-### Verify permissions
+Conectar la placa STM32F3DISCOVERY a su ordenador mediante el cable USB. Asegúrese de conectarlo al bus donde está marcado como "USB ST-LINK" que está justo en el centro de la placa en su extremo.
 
-Connect the STM32F3DISCOVERY to your computer using an USB cable. Be sure to connect the cable to the "USB ST-LINK"
-port, the USB port in the center of the edge of the board.
-
-The STM32F3DISCOVERY should now appear as a USB device (file) in `/dev/bus/usb`. Let's find out how it got
-enumerated:
+El STM32F3DISCOVERY debería aparecer ahora como un dispositivo USB en `/dev/bus/usb`. Vamos a ver cómo se enumera:
 
 ``` console
 lsusb | grep -i stm
 ```
-This should result in:
+La salida obtenida:
 ``` console
 $ lsusb | grep -i stm
 Bus 003 Device 004: ID 0483:374b STMicroelectronics ST-LINK/V2.1
 $ # ^^^        ^^^
 ```
 
-In my case, the STM32F3DISCOVERY got connected to the bus #3 and got enumerated as the device #4. This means the
-file `/dev/bus/usb/003/004` *is* the STM32F3DISCOVERY. Let's check its permissions:
+En mi caso, el STM32F3DISCOVERY obtuvo el `bus` #3 y el `device` #4. Esto significa que el archivo `/dev/bus/usb/003/004` es nuestra placa de desarrollo STM32F3DISCOVERY. 
+Comprobemos sus permisos:
 ``` console
 $ ls -la /dev/bus/usb/003/004
 crw-rw-rw-+ 1 root root 189, 259 Feb 28 13:32 /dev/bus/usb/003/00
 ```
 
-The permissions should be `crw-rw-rw-`. If it's not ... then check your [udev
-rules] and try re-loading them with:
+El permiso debe ser `crw-rw-rw-`. Si no fuera así ... compruebe su [udev rules] e intente recargarlo con este comando:
 
 [udev rules]: linux.md#udev-rules
 
@@ -38,51 +34,46 @@ rules] and try re-loading them with:
 sudo udevadm control --reload-rules
 ```
 
-#### For older devices with OPTIONAL USB <-> FT232 based Serial Module
+#### Para dispositivos más antiguos con el módulo opcional USB <-> FT232 Serie
 
-Unplug the STM32F3DISCOVERY and plug the Serial module. Now, figure out what's its associated file:
+Desconecte la placa STM32F3DISCOVERY y conecte el módulo serie. Observemos a qué archivo se asocia:
 
 ``` console
 $ lsusb | grep -i ft232
 Bus 003 Device 005: ID 0403:6001 Future Technology Devices International, Ltd FT232 Serial (UART) IC
 ```
 
-In my case, it's the `/dev/bus/usb/003/005`. Now, check its permissions:
+En mi caso es `/dev/bus/usb/003/005`. Ahora comprobamos sus permisos:
 
 ``` console
 $ ls -l /dev/bus/usb/003/005
 crw-rw-rw- 1 root root 189, 21 Sep 13 00:00 /dev/bus/usb/003/005
 ```
 
-As before, the permissions should be `crw-rw-rw-`.
+Como antes, los permisos deberían ser `crw-rw-rw-`.
 
-## Verify OpenOCD connection
+## Comprobar la conexión con OpenOCD
 
-Connect the STM32F3DISCOVERY using the USB cable to the USB port in the
-center of edge of the board, the one that's labeled "USB ST-LINK".
+Conecte la placa STM32F3DISCOVERY al PC con el cable USB en el centro y borde derecho de la placa marcado como "USB ST-LINK".
+Dos leds rojos deben estar encendidos (LD1 y LD2) y ejecutándose el programa interno que tenía previamente cargado.
 
-Two *red* LEDs should turn on right after connecting the USB cable to the board.
+> **IMPORTANTE** Existen más revisiones de esta placa STM32F3DISCOVERY. Para aquellas versiones de placa más antiguas, necesitará cambiar el argumento de la
+> "interface" a `-f interface/stlink-v2.cfg`. Alternativamente, las versiones más antiguas pueden utilizar `-f board/stm32f3discovery.cfg`
+> en lugar de `-f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg`.
 
-> **IMPORTANT** There is more than one hardware revision of the STM32F3DISCOVERY board. For older
-> revisions, you'll need to change the "interface" argument to `-f interface/stlink-v2.cfg` (note:
-> no `-1` at the end). Alternatively, older revisions can use `-f board/stm32f3discovery.cfg`
-> instead of `-f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg`.
-
-> **NOTE** OpenOCD v0.11.0 has deprecated `interface/stlink-v2.cfg` in favor of
-> `interface/stlink.cfg` which supports ST-LINK/V1, ST-LINK/V2, ST-LINK/V2-1, and
-> ST-LINK/V3.
+> **NOTA** OpenOCD v0.11.0 tiene descontinuado `interface/stlink-v2.cfg` para usar una versión mejorada `interface/stlink.cfg` que maneja muy bien
+> ST-LINK/V1, ST-LINK/V2, ST-LINK/V2-1, y también ST-LINK/V3.
 
 ### *Nix
 
-> **FYI:** The `interface` directory is typically located in `/usr/share/openocd/scripts/`,
-> which is the default location OpenOCD expects these files. If you've installed them
-> somewhere else use the `-s /path/to/scripts/` option to specify your install directory.
+> **FYI:** El directorio `interface` normalmente está en `/usr/share/openocd/scripts/`,
+> localización predeterminada donde OpenOCD espera encontrar esos archivos. Si usted instaló estos archivos en otro lugar, deberá especificarlo mediante la opción `-s /path/to/scripts/` y pasarle el directorio de instalación.
 
 ``` console
 openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
 ```
 
-or
+o bien:
 
 ``` console
 openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
@@ -91,27 +82,25 @@ openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
 
 ### Windows
 
-Below the references to `C:\OpenOCD` is the directory where OpenOCD is installed.
+Se supone que está instalado en `C:\OpenOCD`:
 
 ``` console
 openocd -s C:\OpenOCD\share\scripts -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
 ```
 
-> **NOTE** cygwin users have reported problems with the -s flag. If you run into
-> that problem you can add `C:\OpenOCD\share\scripts\` directory to the parameters.
+> **NOTA** los usuarios de cygwin han reportado problemas con el marcador -s . Si tienes el mismo problema
+> puede añadir el directorio `C:\OpenOCD\share\scripts\` como parámetro.
 
-cygwin users:
+usuarios de cygwin:
 ``` console
 openocd -f C:\OpenOCD\share\scripts\interface\stlink-v2-1.cfg -f C:\OpenOCD\share\scripts\target\stm32f3x.cfg
 ```
 
-### All
+### Para todos los sistemas operativos
 
-OpenOCD is a service which forwards debug information from the ITM channel
-to a file, `itm.txt`, as such it runs forever and does **not** return to the
-terminal prompt.
+OpenOCD es un servicio que capta la información de depuración desde el canal ITM al archivo `itm.txt`, se ejecuta indefinidamente y **no** devuelve el prompt a la terminal (la bloquea).
 
-The initial output of OpenOCD is something like:
+La salida de OpenOCD es algo como esto:
 ``` console
 Open On-Chip Debugger 0.10.0
 Licensed under GNU GPL v2
@@ -131,11 +120,10 @@ Info : Target voltage: 2.915608
 Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints
 ```
 
-(If you don't ... then check the [general troubleshooting] instructions.)
+(Si no te sale nada de esto ... comprueba las instrucciones [fallos generales] instructions.)
 
-[general troubleshooting]: ../appendix/1-general-troubleshooting/index.html
+[fallos generales]: ../appendix/1-general-troubleshooting/index.html
 
-Also, one of the red LEDs, the one closest to the USB port, should start oscillating between red
-light and green light.
+También notará que uno de los LED estará parpadeando entre dos colores, rojo y verde.
 
-That's it! It works. You can now use `Ctrl-c` to stop OpenOCD or close/kill the terminal.
+Si está todo correcto salimos de la prueba de OpenOCD con `Ctrl-c` lo que finalizará la conexión y podemos cerrar la terminal.
