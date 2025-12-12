@@ -66,7 +66,7 @@ Dos leds rojos deben estar encendidos (LD1 y LD2) y ejecutándose el programa in
 
 ### *Nix
 
-> **FYI:** El directorio `interface` normalmente está en `/usr/share/openocd/scripts/`,
+> El directorio `interface` normalmente está en `/usr/share/openocd/scripts/`,
 > localización predeterminada donde OpenOCD espera encontrar esos archivos. Si usted instaló estos archivos en otro lugar, deberá especificarlo mediante la opción `-s /path/to/scripts/` y pasarle el directorio de instalación.
 
 ``` console
@@ -120,7 +120,7 @@ Info : Target voltage: 2.915608
 Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints
 ```
 
-(Si no te sale nada de esto ... comprueba las instrucciones [fallos generales] instructions.)
+(Si no te sale nada de esto ... comprueba las instrucciones [fallos generales].)
 
 [fallos generales]: ../appendix/1-general-troubleshooting/index.html
 
