@@ -1,25 +1,21 @@
 # LED roulette
 
-Alright, let's start by building the following application:
+Vamos a realizar el proyecto para que se vea como en la siguiente imagen:
 
 <p align="center">
 <img src="https://i.imgur.com/0k1r2Lc.gif">
 </p>
 
-I'm going to give you a high level API to implement this app but don't worry we'll do low level
-stuff later on. The main goal of this chapter is to get familiar with the *flashing* and debugging
-process.
+Voy a proporcionarles una API de alto nivel para implementar esta aplicación, pero no se preocupen, abordaremos los detalles técnicos más adelante. El objetivo principal de este capítulo es familiarizarse con el proceso de flasheo y depuración.
+A lo largo de este texto, utilizaremos el código inicial que se encuentra en el repositorio de [discovery]. Asegúrense de tener siempre la última versión de la rama principal, ya que este sitio web la actualiza.
 
-Throughout this text we'll be using the starter code that's in the [discovery] repository. Make sure
-you always have the latest version of the master branch because this website tracks that branch.
+El código de inicio se encuentra en el directorio `src` de ese repositorio. Dentro de ese directorio hay más directorios con nombres de cada capítulo de este libro. La mayoría de estos directorios son proyectos de inicio de Cargo.
 
-The starter code is in the `src` directory of that repository. Inside that directory there are more
-directories named after each chapter of this book. Most of those directories are starter Cargo
-projects.
+Descargue en su PC este repositorio para mayor comodidad. Para ello, en la imagen, pulse en el botón verde ( code ) y descargue la versión comprimida (Download ZIP). Descomprima el archivo y seleccionaremos el directorio “f3discovery” que contiene los ejemplos de este libro entre otros archivos. Crear un directorio donde trabajaremos con los programas, en mi caso he creado uno llamado "DiscoveryPracticas". En él guardamos una copia del directorio antes mencionado “f3discovery”. 
 
 [discovery]: https://github.com/rust-embedded/discovery
 
-Now, jump into the `src/05-led-roulette` directory. Check the `src/main.rs` file:
+Vaya entonces al directorio `src/05-led-roulette` . Compruebe el archivo `src/main.rs`:
 
 ``` rust
 {{#include src/main.rs}}
