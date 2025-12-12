@@ -57,9 +57,9 @@ Como antes, los permisos deberían ser `crw-rw-rw-`.
 Conecte la placa STM32F3DISCOVERY al PC con el cable USB en el centro y borde derecho de la placa marcado como "USB ST-LINK".
 Dos leds rojos deben estar encendidos (LD1 y LD2) y ejecutándose el programa interno que tenía previamente cargado.
 
-> **IMPORTANTE** Existen más revisiones de esta placa STM32F3DISCOVERY. Para aquellas versiones de placa más antiguas, necesitará cambiar el argumento de la
-> "interface" a `-f interface/stlink-v2.cfg`. Alternativamente, las versiones más antiguas pueden utilizar
-> `-f board/stm32f3discovery.cfg` en lugar de `-f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg`.
+> **IMPORTANTE** Existen más revisiones de esta placa STM32F3DISCOVERY. Para aquellas versiones de placa más antiguas, necesitará cambiar el argumento
+> de la "interface" a `-f interface/stlink-v2.cfg`. Alternativamente, las versiones más antiguas pueden utilizar
+>  `-f board/stm32f3discovery.cfg` en lugar de `-f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg`.
 
 > **NOTA** OpenOCD v0.11.0 tiene descontinuado `interface/stlink-v2.cfg` para usar una versión mejorada `interface/stlink.cfg` que maneja muy bien
 > ST-LINK/V1, ST-LINK/V2, ST-LINK/V2-1, y también ST-LINK/V3.
