@@ -73,25 +73,19 @@ Si echamos un vistazo, veremos que algunos componentes con un tamaño mínimo, e
 
 [Arm Holdings]: https://www.arm.com/
 
-## The Serial module
+## El módulo serie
 
 <p align="center">
 <img title="Serial module" src="../assets/serial.jpg">
 </p>
 
-If you have an older revision of the discovery board, you can use this module to
-exchange data between the microcontroller in the F3 and your computer. This module
-will be connected to your computer using an USB cable. I won't say more at this
-point.
+Si tienes una revisión de su placa un poco antiguo, debes usar este módulo para intercambiar datos entre el microcontrolador en la placa y el PC. Este módulo se conecta a su PC mediante un cable USB.
+Si tiene una placa nueva ( lo más común) entonces no necesitas este módulo. El ST-LINK tiene un convertidor doble que pasa de USB a serie y viceversa, conectado al microcontrolador a través de su USART1 en los pines PC4 y PC5.
 
-If you have a newer release of the board then you don't need this module. The
-ST-LINK will double as a USB<->serial converter connected to the microcontroller USART1 at pins PC4 and PC5.
-
-## The Bluetooth module
+## El módulo Bluetooth
 
 <p align="center">
 <img title="The HC-05 Bluetooth module" src="../assets/bluetooth.jpg">
 </p>
 
-This module has the exact same purpose as the serial module but it sends the data over Bluetooth
-instead of over USB.
+Este módulo tiene el mismo propósito que el módulo anterior serie-USB, 	pero los datos se envían por Bluetooth en vez de USB.
