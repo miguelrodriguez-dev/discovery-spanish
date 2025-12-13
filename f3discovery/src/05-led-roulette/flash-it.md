@@ -1,60 +1,60 @@
-# Flash it
+# Programando el microcontrolador (Flash)
 
-Flashing is the process of moving our program into the microcontroller's (persistent) memory. Once
-flashed, the microcontroller will execute the flashed program every time it is powered on.
+Flashing es el proceso de mover nuestro programa al interior del chip en la memoria del microcontrolador, 
+más concretamente en la memoria flash del microcontrolador. Una vez programado el microcontrolador, 
+ejecutará el programa cada vez que se encienda la placa.
 
-In this case, our `led-roulette` program will be the *only* program in the microcontroller memory.
-By this I mean that there's nothing else running on the microcontroller: no OS, no "daemon",
-nothing. `led-roulette` has full control over the device.
+En este caso, nuestro programa `led-roulette` será el único programa en la memoria permanente del 
+microcontrolador. Con esto quiero decir, que no hay nada más que se ejecute en la cpu: no hay un sistema 
+operativo, no hay demonios corriendo en segundo plano ni nada por el estilo, nada. Nuestro programa 
+`led-roulette` por tanto, tiene el control completo sobre el dispositivo.
 
-Onto the actual flashing. First thing we need to do is launch OpenOCD. We did that in the
-previous section but this time we'll run the command inside a temporary directory (`/tmp` on \*nix;
-`%TEMP%` on Windows).
+Lo primero que debemos hacer es ejecutar OpenOCD. Ya lo hicimos en la sección anterior, pero esta vez 
+ejecutaremos el comando dentro de un directorio temporal (`/tmp` en sistemas *nix; `%TEMP%` en Windows).
 
-Make sure the F3 is connected to your computer and run the following commands in a **new terminal**.
+Asegúrese de que la placa está conectada al PC y ejecute las siguientes instrucciones en una **nueva terminal**.
 
-## For *nix & MacOS:
+## Para sistemas *nix y MacOS:
 ``` console
 cd /tmp
 openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
 ```
 
-## For Windows **Note**: substitute `C:` for the actual OpenOCD path:
+## Para Windows **Nota**: sustituya `C:` por la ruta actul de OpenOCD:
 ```
 cd %TEMP%
 openocd -s C:\share\scripts -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
 ```
 
-> **NOTE** Older revisions of the board need to pass slightly different arguments to
-> `openocd`. Review [this section] for the details.
+> **NOTA** Para las revisiones más antiguas de nuestra placa, se necesita pasar argumentos diferentes a `openocd`.
+> Revise [esta sección] para más detalles.
 
-[this section]: ../03-setup/verify.md#first-openocd-connection
+[esta sección]: ../03-setup/verify.md#first-openocd-connection
 
-The program will block; leave that terminal open.
+El programa bloqueará la terminal, por lo que la dejaremos abierta y ejecutándose.
 
-Now it's a good time to explain what the `openocd` command is actually doing.
+Ahora es un buen momento para explicar lo que hace `openocd`.
 
-I mentioned that the STM32F3DISCOVERY (aka F3) actually has two microcontrollers. One of them is used as a
-programmer/debugger. The part of the board that's used as a programmer is called ST-LINK (that's what
-STMicroelectronics decided to call it). This ST-LINK is connected to the target microcontroller
-using a Serial Wire Debug (SWD) interface (this interface is an ARM standard so you'll run into it
-when dealing with other Cortex-M based microcontrollers). This SWD interface can be used to flash
-and debug a microcontroller. The ST-LINK is connected to the "USB ST-LINK" port and will appear as
-a USB device when you connect the F3 to your computer.
+Mencioné que la placa STM32F3DISCOVERY tiene dos microcontroladores. Uno de ellos se utiliza como programador/depurador. 
+La parte de la placa que se utiliza como programador se llama  ST-LINK (así lo ha llamado el fabricante). Este ST-LINK 
+se conecta al microcontrolador destino usando una interfaz serie cableada para depuración ( Serial Wire Debug (SWD) ). 
+Esta interfaz es un ARM estándar (this interface is an ARM standard Por lo tanto, te lo encontrarás al trabajar con otros 
+microcontroladores basados ​​en Cortex-M. Esta interface SWD se puede utilizar para programar (flashear) y depurar (debug) 
+un microcontrolador. El ST-LINK se conecta al puerto denominado "USB ST-LINK" por lo que aparecerá en nuestro PC como un 
+dispositivo USB cuando conectemos nuestra placa al PC.
 
 <p align="center">
 <img height=640 title="On-board ST-LINK" src="../assets/st-link.png">
 </p>
 
 
-As for OpenOCD, it's software that provides some services like a *GDB server* on top of USB
-devices that expose a debugging protocol like SWD or JTAG.
+En cuanto a OpenOCD, es un software que proporciona algunos servicios como un servidor GDB sobre dispositivos USB que exponen 
+un protocolo de depuración como SWD o JTAG.
 
-Onto the actual command: those `.cfg` files we are using instruct OpenOCD to look for a ST-LINK USB
-device (`interface/stlink-v2-1.cfg`) and to expect a STM32F3XX microcontroller
-(`target/stm32f3x.cfg`) to be connected to the ST-LINK.
+En cuanto al comando actual: esos archivos `.cfg` que estamos usando le indican a OpenOCD que busque un dispositivo USB ST-LINK 
+(`interface/stlink-v2-1.cfgf`) y que espere que un microcontrolador STM32F3XX (`target/stm32f3x.cfgf`) esté conectado al ST-LINK.
 
-The OpenOCD output looks like this:
+La salida de la terminal donde se ejecuta OpenOCD:
 ``` console
 $ openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
 Open On-Chip Debugger 0.10.0
@@ -75,42 +75,43 @@ Info : Target voltage: 2.888183
 Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints
 ```
 
-The "6 breakpoints, 4 watchpoints" part indicates the debugging features the processor has
-available.
+La parte donde indica "6 breakpoints, 4 watchpoints" es sinónimo de que el procesador tiene esas características disponibles.
 
-Leave that `openocd` process running, and in the previous terminal or a new terminal
-**make sure that you are inside the project's `src/05-led-roulette/` directory**.
+Dejemos corriendo al proceso `openocd`, abrimos una nueva terminal **asegurándoos de estar dentro del proyecto `src/05-led-roulette/`**.
 
-I mentioned that OpenOCD provides a GDB server so let's connect to that right now:
+Como dije anteriormente, OpenOCD provee de un servidor GDB por lo que vamos a conectarnos a él:
 
-## Execute GDB
+## Ejecutando GDB
 
-First, we need to determine what version of `gdb` you have that is capable of debugging ARM binaries.
-
-This could be any one of the commands below, try each one:
-``` console
-arm-none-eabi-gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
-```
-``` console
-gdb-multiarch -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
-```
+Lo primero es determinar qué versión de gdb tienes. Para mi caso, Fedora/Suse tumbleweed utiliza gdb:
 ``` console
 gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
 ```
+Sin embargo, para otras distribuciones necesitará otros comandos. Consulte los paquetes disponibles
+en su distro favorita.
 
-> **NOTE**: If you are getting `target/thumbv7em-none-eabihf/debug/led-roulette: No such file or directory`
-> error, try adding `../../` to the file path, for example:
+Arch Linux y Ubuntu 16/16:
+``` console
+arm-none-eabi-gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
+```
+Para Ubuntu 18/Debian strech en adelante:
+``` console
+gdb-multiarch -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
+```
+
+> **NOTA**: Si obtienes un error como `target/thumbv7em-none-eabihf/debug/led-roulette: No such file or directory`
+> intente añadir `../../` a la ruta del archivo, como por ejemplo:
 >
 > ```shell
 > $ gdb -q -ex "target remote :3333" ../../target/thumbv7em-none-eabihf/debug/led-roulette
 > ```
 >
-> This is caused by each example project being in a `workspace` that contains the entire book, and workspaces have
-> a single `target` directory. Check out [Workspaces chapter in Rust Book] for more.
+> La causa es que los ejemplos del libro están en formato `workspace` que contiene el libro entero, y debido a que los
+> workspaces comparten un solo directorio `target`. Eche un vistazo a [Workspaces chapter in Rust Book] para más detalles.
 
-### **Failing case**
+### **En caso de fallo**
 
-You can detect a failing case if there is a `warning` or `error` after the `Remote debugging using :3333` line:
+Puedes ver un fallo tipo `warning` o `error` después de la línea `Remote debugging using :3333`:
 ```
 $ gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
 Reading symbols from target/thumbv7em-none-eabihf/debug/led-roulette...
@@ -119,8 +120,8 @@ warning: Architecture rejected target-supplied description
 Truncated register 16 in remote 'g' packet
 (gdb)
 ```
-### **Successful case**
-Successful case 1:
+### **Casos resueltos**
+Primera solución:
 ```
 $ arm-none-eabi-gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
 Reading symbols from target/thumbv7em-none-eabihf/debug/led-roulette...
@@ -129,7 +130,7 @@ cortex_m_rt::Reset () at ~/.cargo/registry/src/github.com-1ecc6299db9ec823/corte
 497     pub unsafe extern "C" fn Reset() -> ! {
 (gdb)
 ```
-Successful case 2:
+Segunda solución 2:
 ```
 ~/embedded-discovery/src/05-led-roulette (master)
 $ arm-none-eabi-gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
@@ -138,7 +139,7 @@ Remote debugging using :3333
 0x00000000 in ?? ()
 (gdb)
 ```
-In both failing and successful cases you should see new output in the **OpenOCD terminal**, something like the following:
+Tanto en caso de fallo como de éxito, debería aparecer una nueva salida en la **terminal de OpenOCD**:
 ``` diff
  Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints
 +Info : accepting 'gdb' connection on tcp/3333
@@ -146,7 +147,8 @@ In both failing and successful cases you should see new output in the **OpenOCD 
 +Info : flash size = 256kbytes
 ```
 
-> **NOTE** If you are getting an error like `undefined debug reason 7 - target needs reset`, you can try running `monitor reset halt` as described [here](https://stackoverflow.com/questions/38994596/reason-7-target-needs-reset-unreliable-debugging-setup).
+> **NOTA** Si obtienes un error como `undefined debug reason 7 - target needs reset`, puedes intentar ejecutar `monitor reset halt`
+> como se describe [aquí](https://stackoverflow.com/questions/38994596/reason-7-target-needs-reset-unreliable-debugging-setup).
 
 By default OpenOCD's GDB server listens on TCP port 3333 (localhost). This command is connecting to
 that port.
