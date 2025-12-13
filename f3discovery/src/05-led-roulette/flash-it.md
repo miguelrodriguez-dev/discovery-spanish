@@ -130,7 +130,7 @@ cortex_m_rt::Reset () at ~/.cargo/registry/src/github.com-1ecc6299db9ec823/corte
 497     pub unsafe extern "C" fn Reset() -> ! {
 (gdb)
 ```
-Segunda solución 2:
+Segunda solución:
 ```
 ~/embedded-discovery/src/05-led-roulette (master)
 $ arm-none-eabi-gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
@@ -150,16 +150,15 @@ Tanto en caso de fallo como de éxito, debería aparecer una nueva salida en la 
 > **NOTA** Si obtienes un error como `undefined debug reason 7 - target needs reset`, puedes intentar ejecutar `monitor reset halt`
 > como se describe [aquí](https://stackoverflow.com/questions/38994596/reason-7-target-needs-reset-unreliable-debugging-setup).
 
-By default OpenOCD's GDB server listens on TCP port 3333 (localhost). This command is connecting to
-that port.
+De forma predeterminada, el servidor GDB de OpenOCD escucha por el puerto TCP 3333 (localhost). Este comando
+se conecta a ese puerto.
 
-## Update ../.cargo/config.toml
+## Configurar ../.cargo/config.toml
 
-Now that you've successfully determined which debugger you need to use
-we need to change `../.cargo/config.toml` so that the `cargo run` command will succeed.
+Ahora que sabe qué debugger va a utilizar, necesitaremos cambiar el archivo `../.cargo/config.toml` para que el comando `cargo run` se
+ejecute correctamente.
 
-> **NOTE** `cargo` is the Rust package manager and you can read about it
-[here](https://doc.rust-lang.org/cargo/).
+> **NOTA** `cargo` es el gestor de paquete de Rust y puedes leer algo sobre él [aquí](https://doc.rust-lang.org/cargo/).
 
 Get back to the terminal prompt and look at `../.cargo/config.toml`:
 ``` console
