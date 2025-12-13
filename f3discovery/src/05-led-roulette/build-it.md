@@ -1,38 +1,38 @@
-# Build it
+# Compilando nuestro proyecto
 
-The first step is to build our "binary" crate. Because the microcontroller has a different
-architecture than your computer we'll have to cross compile. Cross compiling in Rust land is as simple
-as passing an extra `--target` flag to `rustc`or Cargo. The complicated part is figuring out the
-argument of that flag: the *name* of the target.
+El primer paso es compilar nuestro binario. Debido a que nuestro microcontrolador tiene una arquitectura 
+diferente, la compilación será una compilación cruzada. La compilación cruzada en Rust es tan simple como 
+añadir `--target`  a  `rustc`  o a Cargo. La parte complicada es que a `target` le acompaña un nombre como argumento.
+	
+El microcontrolador en la placa de desarrollo F3 tiene un procesador Cortex-M4F en su interior. Por tanto, 
+`rustc` sabe cómo compilar de forma cruzada sobre la arquitectura Cortex-M suministrando 4 targets diferentes 
+que cubren las diferentes familias de procesadores con esa arquitectura:
 
-The microcontroller in the F3 has a Cortex-M4F processor in it. `rustc` knows how to cross compile
-to the Cortex-M architecture and provides 4 different targets that cover the different processor
-families within that architecture:
+- `thumbv6m-none-eabi`, para procesadores Cortex-M0 y Cortex-M1
+- `thumbv7m-none-eabi`, para procesadores Cortex-M3
+- `thumbv7em-none-eabi`, para procesadores Cortex-M4 y Cortex-M7
+- `thumbv7em-none-eabihf`, para procesadores Cortex-M4**F** y Cortex-M7**F**
 
-- `thumbv6m-none-eabi`, for the Cortex-M0 and Cortex-M1 processors
-- `thumbv7m-none-eabi`, for the Cortex-M3 processor
-- `thumbv7em-none-eabi`, for the Cortex-M4 and Cortex-M7 processors
-- `thumbv7em-none-eabihf`, for the Cortex-M4**F** and Cortex-M7**F** processors
-
-For the F3, we'll use the `thumbv7em-none-eabihf` target. Before cross compiling you have to
-download a pre-compiled version of the standard library (a reduced version of it actually) for your
-target. That's done using `rustup`:
+Para nuetra placa de desarrollo F3, utilizaremos el target `thumbv7em-none-eabihf`. Antes de hacer la compilación
+cruzada, debes descargarte una versión precompilada de la librería estándar (una versión reducida de la actual) para 
+tu target. Esto se hace con `rustup`:
 
 ``` console
 rustup target add thumbv7em-none-eabihf
 ```
 
-You only need to do the above step once; `rustup` will re-install a new standard library
-(`rust-std` component) whenever you update your toolchain.
+Esto solo se hace una vez; `rustup` reinstalará una nueva librería estándar (componentes de `rust-std`) cada vez que 
+actualice su cadena de herramientas.
 
-With the `rust-std` component in place you can now cross compile the program using Cargo.
+Con los componentes de  `rust-std` en su lugar, ahora puede compilar su programa usando Cargo.
 
-> **NOTE** Make sure you are in the `src/05-led-roulette` directory
-> and run `cargo build` command below to create the executable:
+> **NOTa** Asegúrese de que está dentro del directorio `src/05-led-roulette`
+> y ejecute `cargo build` para crear el archivo ejecutable:
+
 ``` console
 cargo build --target thumbv7em-none-eabihf
 ```
-On your console you should see something like:
+La salida debería ser algo como:
 ``` console
 $ cargo build --target thumbv7em-none-eabihf
    Compiling typenum v1.12.0
@@ -88,16 +88,20 @@ $ cargo build --target thumbv7em-none-eabihf
     Finished dev [unoptimized + debuginfo] target(s) in 17.91s
 ```
 
-> **NOTE** Be sure to compile this crate *without* optimizations. The provided Cargo.toml file and build command above will ensure optimizations are off.
+> **NOTA** Asegúrese de compilar el programa *sin* optimizaciones. El archivo Cargo.toml suministrado en el ejemplo
+> asegura que no tiene ninguna optimización.
 
-OK, now we have produced an executable. This executable won't blink any LEDs, it's just a simplified version that we will build upon later in the chapter. As a sanity check, let's verify that the produced executable is actually an ARM binary:
+Ya hemos producido el archivo ejecutable dentro de un nuevo directorio que se ha creado al compilar, llamado “target” 
+(`target/thumbv7em-none-eabihf/debug/led-roulettet`), además de un archivo `Cargo.lock`. Este archivo ejecutable no hará 
+que parpadee ningún led, es solo una versión simplificada que compilaremos más tarde en este mismo capítulo. Vamos a 
+comprobar que el binario generado es un binario ARM:
 
 ``` console
 cargo readobj --target thumbv7em-none-eabihf --bin led-roulette -- --file-header
 ```
-The `cargo readobj ..` above is equivalent to
-`readelf -h target/thumbv7em-none-eabihf/debug/led-roulette`
-and should produce something similar to:
+La instrucción de arriba `cargo readobj ..` es equivalente a `readelf -h target/thumbv7em-none-eabihf/debug/led-roulette`
+y debería de obtenerse una salida parecida a:
+
 ``` console
 $ cargo readobj --target thumbv7em-none-eabihf --bin led-roulette -- --file-header
     Finished dev [unoptimized + debuginfo] target(s) in 0.02s
@@ -123,4 +127,4 @@ ELF Header:
   Section header string table index: 20
   ```
 
-Next, we'll flash the program into our microcontroller.
+Los siguiente será programar (flashear) nuestro microcontrolador.
