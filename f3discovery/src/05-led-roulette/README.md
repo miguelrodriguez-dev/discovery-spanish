@@ -21,26 +21,24 @@ Vaya entonces al directorio `src/05-led-roulette` . Compruebe el archivo `src/ma
 {{#include src/main.rs}}
 ```
 
-Microcontroller programs are different from standard programs in two aspects: `#![no_std]` and
-`#![no_main]`.
+Los programas hechos para microcontroladores son diferentes a los programas hecho para su PC aunque ambos utilicen Rust para su programación. 
+Principalmente, la diferencia radica en: `#![no_std]` y `#![no_main]`.
 
-The `no_std` attribute says that this program won't use the `std` crate, which assumes an underlying
-OS; the program will instead use the `core` crate, a subset of `std` that can run on bare metal
-systems (i.e., systems without OS abstractions like files and sockets).
+El atributo `no_std` nos indica que este programa no usará el crate `std`, lo cual asume un S.O subyacente; el programa en su lugar usará el 
+crate `core`, un subconjunto de `std` que puede ejecutarse en sistemas bare metal (por ejemplo: sistemas sin abstracciones del sistema operativo como archivos y sockets).
 
-The `no_main` attribute says that this program won't use the standard `main` interface, which is
-tailored for command line applications that receive arguments. Instead of the standard `main` we'll
-use the `entry` attribute from the [`cortex-m-rt`] crate to define a custom entry point. In this
-program we have named the entry point "main", but any other name could have been used. The entry
-point function must have the signature `fn() -> !`; this type indicates that the function can't
-return – this means that the program never terminates.
+El atributo `no_main` indica que este programa no usará la interfaz estándar `main`, que está diseñada 
+para aplicaciones de línea de comandos que reciben argumentos. En lugar de `main` estándar, usaremos el 
+atributo `entry` suministrado por el crate [`cortex-m-rt`] para definir un punto de entrada (inicio del 
+software) personalizable. En este programa, hemos llamado al punto de entrada "main", pero se podría haber 
+usado otro nombre. El punto de entrada es una función con la firma  `fn() -> !`; esto indica que esta función 
+no devuelve nada, osea, que el programa nunca termina.
 
 [`cortex-m-rt`]: https://crates.io/crates/cortex-m-rt
 
-If you are a careful observer, you'll also notice there is a `.cargo` directory in the Cargo project
-as well. This directory contains a Cargo configuration file (`.cargo/config`) that tweaks the
-linking process to tailor the memory layout of the program to the requirements of the target device.
-This modified linking process is a requirement of the `cortex-m-rt` crate. You'll also be making
-further tweaks to `.cargo/config` in future sections to make building and debugging easier.
-
-Alright, let's start by building this program.
+En el proyecto nuevo, habrá observado (si tiene habilitado “ver archivos ocultos”) que hay un directorio oculto 
+denominado `.cargo`. Este directorio contiene la configuración de Cargo solo para este proyecto (`.cargo/config`) 
+esto modifica el proceso de linking para adaptar la distribución de memoria del programa a los requisitos del 
+dispositivo de destino. Este proceso de linking modificado es un requisito del paquete `cortex-m-rt`. En secciones 
+posteriores, también realizarás ajustes adicionales en `.cargo/config` para facilitar la compilación y la depuración. 
+Vamos a construir (compilar) nuestro programa. 
