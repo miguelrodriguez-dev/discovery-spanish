@@ -56,9 +56,11 @@ En cuanto al comando actual: esos archivos `.cfg` que estamos usando le indican 
 
 La salida de la terminal donde se ejecuta OpenOCD:
 ``` console
-$ openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
-Open On-Chip Debugger 0.10.0
-Licensed under GNU GPL v2
+openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
+```
+Y la salida obtenida:
+```
+Open On-Chip Debugger 0.10.0censed under GNU GPL v2
 For bug reports, read
 	http://openocd.org/doc/doxygen/bugs.html
 Info : auto-selecting first available session transport "hla_swd". To override use 'transport select <transport>'.
@@ -74,8 +76,7 @@ Info : using stlink api v2
 Info : Target voltage: 2.888183
 Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints
 ```
-
-La parte donde indica "6 breakpoints, 4 watchpoints" es sinónimo de que el procesador tiene esas características disponibles.
+a parte donde indica "6 breakpoints, 4 watchpoints" es sinónimo de que el procesador tiene esas características disponibles.
 
 Dejemos corriendo al proceso `openocd`, abrimos una nueva terminal **asegurándoos de estar dentro del proyecto `src/05-led-roulette/`**.
 
@@ -103,7 +104,7 @@ gdb-multiarch -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/le
 > intente añadir `../../` a la ruta del archivo, como por ejemplo:
 >
 > ```shell
-> $ gdb -q -ex "target remote :3333" ../../target/thumbv7em-none-eabihf/debug/led-roulette
+> gdb -q -ex "target remote :3333" ../../target/thumbv7em-none-eabihf/debug/led-roulette
 > ```
 >
 > La causa es que los ejemplos del libro están en formato `workspace` que contiene el libro entero, y debido a que los
@@ -194,46 +195,36 @@ ejecute correctamente.
 
 > **NOTA** `cargo` es el gestor de paquete de Rust y puedes leer algo sobre él [aquí](https://doc.rust-lang.org/cargo/).
 
-Abramos una terminal y modifiquemos el archivo `../.cargo/config.toml`. Aquí tenemos `arm-none-eabi-gdb` activado para usar (está descomentado):
+Abramos una terminal y modifiquemos el archivo `../.cargo/config.toml`. Aquí tenemos `arm-none-eabi-gdb` activado para usar (está descomentado). Lo primero,
+situarnos en el directorio de nuestro proyecto:
+
 ``` console
-~/embedded-discovery/src/05-led-roulette
-$ nano ../.cargo/config.toml
+cd ~/embedded-discovery/src/05-led-roulette
+```
+Luego editamos con `nano` el archivo `../.cargo/config.toml`:
+
+``` console
+`nano ../.cargo/config.toml
+```
+El archivo debe tener algo parecido a esto:
+```
 # default runner starts a GDB sesssion, which requires OpenOCD to be
 # running, e.g.,
 ## openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
 # depending on your local GDB, pick one of the following
 [target.thumbv7em-none-eabihf]
-runner = "arm-none-eabi-gdb -q -x ../openocd.gdb"
+#runner = "arm-none-eabi-gdb -q -x ../openocd.gdb"
 # runner = "gdb-multiarch -q -x ../openocd.gdb"
-# runner = "gdb -q -x ../openocd.gdb"
+runner = "gdb -q -x ../openocd.gdb"
 rustflags = [
   "-C", "link-arg=-Tlink.x",
 ]
 
 [build]
 target = "thumbv7em-none-eabihf"
-
 ```
-
-También puedes usar `git diff`:
-``` diff
-$ git diff ../.cargo/config.toml
-diff --git a/f3discovery/src/.cargo/config.toml b/f3discovery/src/.cargo/config.toml
-index 2f38f6b..95860a0 100644
---- a/f3discovery/src/.cargo/config.toml
-+++ b/f3discovery/src/.cargo/config.toml
-@@ -3,8 +3,8 @@
- ## openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
- # depending on your local GDB, pick one of the following
- [target.thumbv7em-none-eabihf]
--runner = "arm-none-eabi-gdb -q -x ../openocd.gdb"
--# runner = "gdb-multiarch -q -x ../openocd.gdb"
-+# runner = "arm-none-eabi-gdb -q -x ../openocd.gdb"
-+runner = "gdb-multiarch -q -x ../openocd.gdb"
- # runner = "gdb -q -x ../openocd.gdb"
- rustflags = [
-   "-C", "link-arg=-Tlink.x",
-```
+Vemos que en esta ocasión, se ha activado el GDB para Fedora. Utilice su GDB para su distro, descomentando el que desea y comentando el que estaba habilitado.
+No se permite tener dos runner activados. Yo no lo haría.
 Ahora podemos depurar nuestro programa usanso cargo run.
 
 > **NOTA** El `--target thumbv7em-none-eabihf` define qué arquitectura compilar y ejecutar.
