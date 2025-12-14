@@ -184,6 +184,7 @@ Info : flash size = 256kbytes
 ```
 
 Y con esto, ya tenemos programado el chip. Salga de ambas sesiones, cerrando ambas terminales para seguir con el libro y no provocar extraños errores.
+
 Existe un procedimiento mediante la modificación necesaria de `.cargo/config.toml` por el que, con la ejecución simple de `cargo run` en la terminal donde 
 no se ejecuta `openocd`, para que se abra una sesión de GDB y programe el chip al mismo tiempo, y esperando a nuevas órdenes en la sesión de GDB.
 
@@ -204,7 +205,7 @@ cd ~/embedded-discovery/src/05-led-roulette
 Luego editamos con `nano` el archivo `../.cargo/config.toml`:
 
 ``` console
-`nano ../.cargo/config.toml
+nano ../.cargo/config.toml
 ```
 El archivo debe tener algo parecido a esto:
 ```
@@ -225,21 +226,20 @@ target = "thumbv7em-none-eabihf"
 ```
 Vemos que en esta ocasión, se ha activado el GDB para Fedora. Utilice su GDB para su distro, descomentando el que desea y comentando el que estaba habilitado.
 No se permite tener dos runner activados. Yo no lo haría.
-Ahora podemos depurar nuestro programa usanso cargo run.
+
+Ahora podemos depurar nuestro programa usando `cargo run`. Para ello, vuelva a crear una sesión en otra terminal para openocd y en la nueva terminal ejecutamos:
 
 > **NOTA** El `--target thumbv7em-none-eabihf` define qué arquitectura compilar y ejecutar.
-> En nuestro `../.cargo/config.toml` tenemos `target = "thumbv7em-none-eabihf"` por lo que
-> no es necesario hacer ningún cambio en  `--target`. Lo hacemos aquí solo para que sepas
-> que se pueden usar parámetros en la línea de comandos y que estos anulan los de los
-> archivos config.toml.
+> En nuestro `../.cargo/config.toml` tenemos `target = "thumbv7em-none-eabihf"` (al final del
+> archivo) por lo que no es necesario hacer ningún cambio en  `--target`. Lo hacemos aquí solo
+>  para que sepas que se pueden usar parámetros en la línea de comandos y que estos anulan los
+> de los archivos config.toml.
 
 ```
 cargo run --target thumbv7em-none-eabihf
 ```
 La salida es:
 ```
-~/embedded-discovery/src/05-led-roulette
-$ cargo run --target thumbv7em-none-eabihf
     Finished dev [unoptimized + debuginfo] target(s) in 0.14s
      Running `gdb-multiarch -q -x ../openocd.gdb /home/adam/vc/rust-training/discovery/f3discovery/target/thumbv7em-none-eabihf/debug/led-roulette`
 Reading symbols from /home/adam/vc/rust-training/discovery/f3discovery/target/thumbv7em-none-eabihf/debug/led-roulette...
@@ -262,52 +262,15 @@ halted: PC: 0x080001ee
 led_roulette::__cortex_m_rt_main () at src/05-led-roulette/src/main.rs:10
 10	    let x = 42;
 ```
+> **NOTA** Los argumentos `-x ../openocd.gdb` para `gdb` permiten programar el chip
+> por lo que con un simple `cargo run` se queda programado. Se hablará con más detalles
+> sobre la configuración del script para openocd en la siguiente sección.
+
+Fíjese que el `runner` ha ejecutado la conexión TCP con openocd, también ha programado el chip, y además ha creado varios breakpoints.
 
 Modificaremos `../.cargo/config.toml` en el futuro. Sin embargo, dado que este archivo se comparte 
 entre todos los capítulos, dichos cambios deben realizarse teniendo esto en cuenta. Si desea o necesitamos 
 realizar cambios que solo afecten a un capítulo en particular, cree un archivo `.cargo/config.toml` local en 
 el directorio de ese capítulo.
 
-## Grabando en el chip
-
-Bien, si tiene abierto y ejecutando en una terminal openocd, y otra terminal corriendo GDB, le aconsejo cerrarla y volver
-a abrir una sesión nueva de openocd y otra terminal nueva para ejecutar nuestro GDB. Esto se debe a que si ha seguido
-los pasos de ejecutar el runner, ing you have GDB running, if not start it as suggested in the previous section.
-
-> **NOTE** The `-x ../openocd.gdb` arguments to `gdb` is already setup
-> to flash the device, so explicitly flashing the project code to the
-> device is normally handled with a simple `cargo run`.  We'll cover
-> the openocd configuration script in the next section.
-
-Now use the `load` command in `gdb` to actually flash the program into the device:
-```
-(gdb) load
-Loading section .vector_table, size 0x194 lma 0x8000000
-Loading section .text, size 0x20ec lma 0x8000194
-Loading section .rodata, size 0x514 lma 0x8002280
-Start address 0x08000194, load size 10132
-Transfer rate: 17 KB/sec, 3377 bytes/write.
-```
-
-You'll also see new output in the OpenOCD terminal, something like:
-
-``` diff
- Info : flash size = 256kbytes
-+Info : Unable to match requested speed 1000 kHz, using 950 kHz
-+Info : Unable to match requested speed 1000 kHz, using 950 kHz
-+adapter speed: 950 kHz
-+target halted due to debug-request, current mode: Thread
-+xPSR: 0x01000000 pc: 0x08000194 msp: 0x2000a000
-+Info : Unable to match requested speed 8000 kHz, using 4000 kHz
-+Info : Unable to match requested speed 8000 kHz, using 4000 kHz
-+adapter speed: 4000 kHz
-+target halted due to breakpoint, current mode: Thread
-+xPSR: 0x61000000 pc: 0x2000003a msp: 0x2000a000
-+Info : Unable to match requested speed 1000 kHz, using 950 kHz
-+Info : Unable to match requested speed 1000 kHz, using 950 kHz
-+adapter speed: 950 kHz
-+target halted due to debug-request, current mode: Thread
-+xPSR: 0x01000000 pc: 0x08000194 msp: 0x2000a000
-```
-
-Our program is loaded, let's debug it!
+Yá tenemos programado el chip, por lo que procederemos a la depuración.
