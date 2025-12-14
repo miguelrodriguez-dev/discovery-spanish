@@ -274,8 +274,12 @@ realizar cambios que solo afecten a un capítulo en particular, cree un archivo 
 el directorio de ese capítulo.
 
 ## Resumen
-En primer lugar, para programar un microcontrolador, debemos de tener primiero, el programa compilado para nuestra arquitectura. Debemos de tener cuidado en el tamaño de nuestro programa final para poder cargarlo en el chip. Hechas estas comprobaciones, lo siguiente es abrir una terminal para la sesión de openocd y otra terminal para la sesión de GDB. Por ésta última (GDB) es donde le mandamos los comandos para programar el chip, en concreto, el comando `load`.
+En primer lugar, para programar un microcontrolador, debemos de tener primero, el programa compilado para nuestra arquitectura. 
+Debemos de tener cuidado en el tamaño de nuestro programa final para poder cargarlo en el chip. Hechas estas comprobaciones, 
+lo siguiente es abrir una terminal para la sesión de `openocd` y otra terminal para la sesión de `GDB`. Por ésta última terminal (GDB),
+se introduce el comando `load` para proceder a la grabación del programa en el microcontrolador.
 
-Para facilitarnos la vida, y no tener que poner comandos tan largos, se crea un archivo llamado .cargo/config.toml para modificarlo y ajustarlo para nuestro proyecto y poder ejecutar la sesión GDB y programar nuestro chip tan solo con `cargo run`.
+Para facilitarnos la vida, y no tener que poner comandos tan largos, se crea un archivo llamado .cargo/config.toml para modificarlo y 
+ajustarlo para nuestro proyecto y poder ejecutar la sesión GDB y programar nuestro chip tan solo con `cargo run`.
 
 Yá tenemos programado el chip, por lo que procederemos a la depuración.
