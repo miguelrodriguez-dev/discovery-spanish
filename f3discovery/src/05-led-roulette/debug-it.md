@@ -270,7 +270,7 @@ $ cargo run
 (gdb) continue
 ```
 > **NOTA** Si tenía activado el runner y ejecutó cargo run, todos los comandos anteriores se han realizado. Si se pierde
-> y no encuentra la línea o le cuesta seguir las instrucciones, recomiendo ejecutar cargo run sin activar el runner, recordandoele que siempre
+> y no encuentra la línea o le cuesta seguir las instrucciones, recomiendo ejecutar cargo run sin activar el runner, recordandole que siempre
 > debe tener abierta la sesión de openocd.
 
 Todos los comandos de arriba, se pueden pasar a cargo run en una sola instrucción con parámetros `-ex` y ahorrará bastante en escritura,
@@ -307,7 +307,7 @@ Para abandonar el modo TUI :
 
 ![GDB session layout split](../assets/gdb-layout-split-4.png "GDB TUI layout split 4")
 
-> **NOTE** Si la interfaz de línea de comandos (CLI) de GDB predeterminada no te convence, prueba [gdb-dashboard].
+> **NOTA** Si la interfaz de línea de comandos (CLI) de GDB predeterminada no te convence, prueba [gdb-dashboard].
 > Utiliza Python para convertir la CLI de GDB en un panel de control que muestra los registros, la vista del código fuente,
 > la vista del ensamblador y otras funciones. 
 
