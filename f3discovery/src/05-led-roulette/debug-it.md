@@ -1,23 +1,20 @@
 # Debug it
 
-We are already inside a debugging session so let's debug our program.
+Todavía estamos en la sesión después de hacer un `load` o bien de ejeuctar `cargo run` (mediante la activación del `runner previamente`), 
+por lo que vamos a hacer una depuración.
 
-After the `load` command, our program is stopped at its *entry point*. This is indicated by the
-"Start address 0x8000XXX" part of GDB's output. The entry point is the part of a program that a
-processor / CPU will execute first.
+Nuestro programa está detenido en su punto de entrada "entry point". Esto está referenciado como la dirección de inicio 0x8000XXX en la terminal 
+donde se está ejecutando GDB. En mi caso, la dirección de inicio es “Start address 0x08000194”. Este punto de entrada, es lo primero que ejecuta 
+el procesador.
 
-The starter project I've provided to you has some extra code that runs *before* the `main` function.
-At this time, we are not interested in that "pre-main" part so let's skip right to the beginning of
-the `main` function. We'll do that using a breakpoint. Issue `break main` at the `(gdb)` prompt:
+El proyecto inicial tiene código adicional que se ejecuta antes de la función principal. En este momento, no nos interesa esa parte que viene antes de `main`,
+así que pasemos directamente al inicio de la función principal. Lo haremos usando un punto de interrupción. Ejecuta `break main` en la línea de comandos (de gdb):
 
-> **NOTE** For these GDB commands I generally won't provide a copyable code block
-> as these are short and it's faster just to type them yourself. In addition most
-> can be shortened. For instance `b` for `break` or `s` for `step`, see [GDB Quick Reference]
-> for more info or use Google to find your others. In addition, you can use tab completion
-> by typing the first few letters than one tab to complete or two tabs to
-> see all possible commands.
->
->> Finally, `help xxxx` where xxxx is the command will provide short names and other info:
+> **NOTA** Consulta la Guía rápida de GDB para obtener más información o usa Google para encontrar las abreviaturas
+> de los demás comandos. Puede también usar la tecla del tabulador después de colocar las primeras letras para el
+> autocompletado o dos veces al tabulador para consultar los posibles comandos. Finalmente, `help xxxx` donde `xxxx` es
+> el comando donde le entregará información sobre ese comando:
+
 >> ```
 >> (gdb) help s
 >> step, s
@@ -27,12 +24,22 @@ the `main` function. We'll do that using a breakpoint. Issue `break main` at the
 >> ```
 
 [GDB Quick Reference]: https://users.ece.utexas.edu/~adnan/gdb-refcard.pdf
+
+Ejecutamos el `break main`:
+
 ```
 (gdb) break main
 Breakpoint 1 at 0x80001f0: file src/05-led-roulette/src/main.rs, line 7.
 Note: automatically using hardware breakpoints for read-only addresses.
 ```
-Next issue a `continue` command:
+> **Nota** Si ejecutó `cargo run` con el `runner` activado adecuadamente, ya se habrá creado un breakpoint 
+> a `main`, justo en la línea 7 y con el número de break a 1. Pero es posible que la posición 
+> del puntero, no quede en el punto que deseamos, por lo que tendremos que ejecutar un `reset`
+> para situar al microcontrolador en la posición de inicio con el comando `monitor reset halt` 
+> y el siguiente comando será `continue`  que se supone que saltará hasta el punto de entrada:
+
+A continuación introduciremos el coamndo `continue`:
+
 ```
 (gdb) continue
 Continuing.
@@ -41,16 +48,17 @@ Breakpoint 1, led_roulette::__cortex_m_rt_main_trampoline () at src/05-led-roule
 7       #[entry]
 ```
 
-Breakpoints can be used to stop the normal flow of a program. The `continue` command will let the
-program run freely *until* it reaches a breakpoint. In this case, until it reaches `#[entry]`
-which is a trampoline to the main function and where `break main` sets the breakpoint.
+Los Breakpoints se utilizan para parar el flujo normal de un programa. El comando `continue` deja al programa 
+que se ejecute libremente hasta que llegue a un punto de parada o Breakpoint. En este caso, hasta llegar a `#[entry]`
+que es un trampolin a la función `main` y donde se ha colocado el breakpoint.
 
-> **Note** that GDB output says "Breakpoint 1". Remember that our processor can only use six of these
-> breakpoints so it's a good idea to pay attention to these messages.
+> **Nota** La salida de GDB dice "Breakpoint 1". Recuerda que nuestro procesador solo puede manejar 6 breakpoint,
+> por lo que deberá estar atento a esa numeración.
 
-OK. Since we are stopped at `#[entry]` and using the `disassemble /m` we see the code
-for entry, which is a trampoline to main. That means it sets up the stack and then
-invokes a subroutine call to the `main` function using an ARM branch and link instruction, `bl`.
+Dado que nos hemos detenido en `#[entry]` y usamos el `disassemble /m` , vemos el código de `entry`, que es un salto 
+a `main`. Esto significa que configura la pila y luego invoca una llamada a la subrutina de la función `main` usando 
+una instrucción de bifurcación y enlace ARM, `bl`.
+
 ```
 (gdb) disassemble /m
 Dump of assembler code for function main:
