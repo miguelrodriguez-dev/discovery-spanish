@@ -1,4 +1,4 @@
-# Debug it
+# Depurando
 
 Todavía estamos en la sesión después de hacer un `load` o bien de ejeuctar `cargo run` (mediante la activación del `runner previamente`), 
 por lo que vamos a hacer una depuración.
@@ -71,35 +71,33 @@ Dump of assembler code for function main:
 End of assembler dump.
 ```
 
-Next we need to issue a `step` GDB command which will advance the program statement
-by statement stepping into functions/procedures. So after this first `step` command we're
-inside `main` and are positioned at the first executable `rust` statement, line 10, but it is
-**not** executed:
+Lo siguiente es usar el comando `step` de GDB el cual avanza un paso hacia adelante instrucción por instrucción. 
+Después de este primer `step` estaremos dentro del `main` de nuestro programa y en la primera línea ejecutable de 
+nuestro programa, que es la línea 10, pero **no** se ejecuta:
+
 ```
 (gdb) step
 led_roulette::__cortex_m_rt_main () at src/05-led-roulette/src/main.rs:10
 10          let x = 42;
 ```
 
-Next we'll issue a second `step` which executes line 10 and stops at
-line `11    _y = x;`, again line 11 is **not** executed.
+Introduzcamos un segundo comando `step` que hará que se ejecute la línea 10 y se para en 
+la línea `11    _y = x;`, por supuesto, la línea 11 **no** se ejecuta.
 
-> **NOTE** We could have pressed enter at the second `(gdb) ` prompt and
-> it would have reissued the previous statement, `step`, but for clarity
-> in this tutorial we'll generally retype the command.
+> **NOTA** Podríamos haber presionado la tecla `enter` y se hubiera colocado la última instrucción
+> que hemos introducido (en este caso era `step`). pero para más claridad en este tutorial escribo
+> de nuevo el comando.
 
 ```
 (gdb) step
 11          _y = x;
 ```
 
-As you can see, in this mode, on each `step` command GDB will print the current statement along
-with its line number. As you'll see later in the TUI mode you'll not see the statement
-in the command area.
-
-We are now "on" the `_y = x` statement; that statement hasn't been executed yet. This means that `x`
-is initialized but `_y` is not. Let's inspect those stack/local variables using the `print`
-command, `p` for short:
+Como puede ver, en este modo, con cada `step`, GDB imprimirá la instrucción actual con su numero de 
+línea. Como verá más tarde, en el modo `TUI mode` no verá ninguna instrucción en el área de comandos.
+Estamos en la línea 11 "sobre" la instrucción  `_y = x `; esta instrucción todavía no se ha ejecutado. 
+Esto significa que `x` se inicializa pero `_y` todavía no. Vamos a inspeccionar esas variables locales 
+y la pila usando el comando `print` o `p` para abreviar:
 
 ```
 (gdb) print x
@@ -112,15 +110,13 @@ $3 = 536870912
 $4 = (*mut i32) 0x20009fe4
 ```
 
-As expected, `x` contains the value `42`. `_y`, however, contains the value `536870912` (?). This
-is because `_y` has not been initialized yet, it contains some garbage value.
+Como se esperaba, `x` contiene el valor 42. sin embargo `_y`, contiene un valor 536870912 (?). Esto se 
+debe a que `_y` todavía no se ha inicializado en el punto en el que estamos, por tanto contiene un valor basura.
 
-The command `print &x` prints the address of the variable `x`. The interesting bit here is that GDB
-output shows the type of the reference: `*mut i32`, a mutable pointer to an `i32` value. Another
-interesting thing is that the addresses of `x` and `_y` are very close to each other: their
-addresses are just `4` bytes apart.
-
-Instead of printing the local variables one by one, you can also use the `info locals` command:
+El comando `print &x` imprime la dirección de la variable `x`. La cosa interesante aquí es que también muestra 
+el tipo de la referencia : `*mut i32`, un puntero mutable a un valor i32. Otro aspecto importante es que la dirección 
+de `x` e  `_y` están muy cercas uno de otro: sus direcciones se separan justo 4 bytes.
+En lugar de imprimir las variables locales, una a una, puede utilizar el comando `info locals`:
 
 ```
 (gdb) info locals
@@ -128,31 +124,31 @@ x = 42
 _y = 536870912
 ```
 
-OK. With another `step`, we'll be on top of the `loop {}` statement:
+Con otro comando `step`, estaremos en `loop {}` pero sin entrar en el:
 
 ```
 (gdb) step
 14          loop {}
 ```
 
-And `_y` should now be initialized.
+Ahora `_y` está inicializada.
 
 ```
 (gdb) print _y
 $5 = 42
 ```
 
-If we use `step` again on top of the `loop {}` statement, we'll get stuck because the program will
-never pass that statement.
+Con otro comando `step` justo encima de `loop {}`, nos bloquearemos porque el programa nunca pasará este cilco `loop`.
 
-> **NOTE** If you used the `step` or any other command by mistake and GDB gets stuck, you can get
-> it unstuck by hitting `Ctrl+C`.
+> **NOTA** Si por error has entrado en el cilo loop o por alguna otra razón el programa se bloquea, puedes desbloquearlo
+> presionando `Ctrl+C`.
 
-As introduced above the `disassemble /m` command can be used to disassemble the program around the
-line you are currently at. You might also want to `set print asm-demangle on`
-so the names are demangled, this only needs to be done once a debug session. Later
-this and other commands will be placed in an initialization file which will simplify
-starting a debug session.
+Como se mencionó anteriormente, el comando `disassemble /m` permite desensamblar el programa hasta la línea actual. 
+También puede activar `print asm-demangle on` para que los nombres se muestren sin codificar; esto solo es necesario hacerlo
+una vez por sesión de depuración. Más adelante, este y otros comandos se incluirán en un archivo de inicialización, lo que 
+simplificará el inicio de una sesión de depuración.
+
+> **Nota**: Si ejecutó `cargo run` para este ejercicio, sepa que no es necesario activar `asm-demangle` ya que está activado desde el archivo `openocd.gdb`.
 
 ```
 (gdb) set print asm-demangle on
@@ -178,13 +174,12 @@ Dump of assembler code for function _ZN12led_roulette18__cortex_m_rt_main17h51e7
 End of assembler dump.
 ```
 
-See the fat arrow `=>` on the left side? It shows the instruction the processor will execute next.
+¿Ves la flecha gorda `=>` en el lado izquierdo del listado? Esta flecha aputna a la siguiente instrucción 
+que el procesador ejecutará.
 
-Also, as mentioned above if you were to execute the `step` command GDB gets stuck because it
-is executing a branch instruction to itself and never gets past it. So you need to use
-`Ctrl+C` to regain control. An alternative is to use the `stepi`(`si`) GDB command, which steps
-one asm instruction, and GDB will print the address **and** line number of the statement
-the processor will execute next and it won't get stuck.
+Como dije antes, si se bloqueaba su sesión de GDB podía resolverlos pulsando `Ctrl+C`, una alternativa a esto
+sería utilizar el comando `stepi`(`si`de forma abreviada), el cual avanza en una intrucción de esamblador, y GDB 
+imprimirá la dirección **y** el número de línea siguiente que ejecutará el procesador si llegar a bloquearse.
 
 ```
 (gdb) stepi
@@ -194,7 +189,7 @@ the processor will execute next and it won't get stuck.
 0x08000194      14          loop {}
 ```
 
-One last trick before we move to something more interesting. Enter the following commands into GDB:
+Introduzca el comando `monitor reset halt` seguido de otro comando `continue`: 
 
 ```
 (gdb) monitor reset halt
@@ -221,22 +216,18 @@ Dump of assembler code for function main:
 End of assembler dump.
 ```
 
-We are now back at the beginning of `#[entry]`!
+Estamos de nuevo al principio de `#[entry]`!
 
-`monitor reset halt` will reset the microcontroller and stop it right at the beginning of the program.
-The `continue` command will then let the program run freely until it reaches a breakpoint, in
-this case it is the breakpoint at `#[entry]`.
+`monitor reset halt`reseteará el microcontrolador y parará al principio del programa. El comando `continue` dejará 
+que el programa se ejecute normalmente hasta llegar al punto de parada o Breakpoint, y en este caso el breakpoint 
+está en `#[entry]`. Esta combinación resulta muy útil cuando, por error, se omite una parte del programa que se desea 
+inspeccionar. Permite restaurar fácilmente el estado del programa hasta su inicio.
 
-This combo is handy when you, by mistake, skipped over a part of the program that you were
-interested in inspecting. You can easily roll back the state of your program back to its very
-beginning.
+> **NOTA**: Este comando de reset no borra la RAM de los datos que teníamos. Esos datos se quedarán ahí y no deberían
+> ser un problema, a menos que el comportamiento de tu programa dependa del valor de variables no inicializadas, pero
+> esa es la definición de Comportamiento Indefinido (UB).
 
-> **The fine print**: This `reset` command doesn't clear or touch RAM. That memory will retain its
-> values from the previous run. That shouldn't be a problem though, unless your program behavior
-> depends of the value of *uninitialized* variables but that's the definition of Undefined Behavior
-> (UB).
-
-We are done with this debug session. You can end it with the `quit` command.
+Terminamos con la sesión con el comando `quit`.
 
 ```
 (gdb) quit
@@ -249,8 +240,13 @@ Detaching from program: $PWD/target/thumbv7em-none-eabihf/debug/led-roulette, Re
 Ending remote debugging.
 ```
 
-For a nicer debugging experience, you can use GDB's Text User Interface (TUI). To enter into that
-mode enter one of the following commands in the GDB shell:
+Si quiere tener una experiencia más agradable, puede usar Text User Interface (TUI). Para entrar en este modo de visualización,
+introduzca uno de los siguiente comandos (solo uno ) en la terminal de GDB. 
+
+> **Nota** Para hacer esto, **cierre todas** las sesiones abiertas tanto de `GDB` como las de `openocd`
+> ya que provoca fallos por tener habilitado TUI anteriormente.
+
+Ahora si, introduzca uno ede los siguientes comandos:
 
 ```
 (gdb) layout src
@@ -258,11 +254,11 @@ mode enter one of the following commands in the GDB shell:
 (gdb) layout split
 ```
 
-> **NOTE** Apologies to Windows users, the GDB shipped with the GNU ARM Embedded Toolchain
-> may not support this TUI mode `:-(`.
+> **NOTA** Los usuarios de Windows, no tienen incorporado en GDB las herramientas GNU ARM Embedded Toolchain
+> por lo que no tiene este modo TUI `:-(`.
 
-Below is an example of setting up for a `layout split` by executing the follow commands.
-As you can see we've dropped passing the `--target` parameter:
+A continuación se muestra un ejemplo para el  `layout split` ejecutando los sisguientes comandos.
+Como podrá ver, no se ha utilizado el parámetro `--target` :
 
 ``` console
 $ cargo run
@@ -273,22 +269,25 @@ $ cargo run
 (gdb) break main
 (gdb) continue
 ```
+> **NOTA** Si tenía activado el runner y ejecutó cargo run, todos los comandos anteriores se han realizado. Si se pierde
+> y no encuentra la línea o le cuesta seguir las instrucciones, recomiendo ejecutar cargo run sin activar el runner, recordandoele que siempre
+> debe tener abierta la sesión de openocd.
 
-Here is a command line with the above commands as `-ex` parameters to save you some typing,
-shortly we'll be providing an easier way to execute the initial set of commands:
+Todos los comandos de arriba, se pueden pasar a cargo run en una sola instrucción con parámetros `-ex` y ahorrará bastante en escritura,
+sobre todos si copia y pega :).
 ```
 cargo run -- -q -ex 'target remote :3333' -ex 'load' -ex 'set print asm-demangle on' -ex 'set style sources off' -ex 'b main' -ex 'c' target/thumbv7em-none-eabihf/debug/led-roulette
 ```
 
-And below is the result:
+Y su salida:
 
 ![GDB session layout split](../assets/gdb-layout-split-1.png "GDB TUI layout split 1")
 
-Now we'll scroll the top source window down so we see the entire file and execute `layout split` and then `step`:
+Ahora desplazaremos la ventana de origen superior hacia abajo para ver el archivo completo y ejecutaremos `layout split` y luego `step`:
 
 ![GDB session layout split](../assets/gdb-layout-split-2.png "GDB TUI layout split 2")
 
-Then we'll execute a few `info locals` and `step`'s:
+Ejecute unos pocos de `info locals` y `step`:
 
 ``` console
 (gdb) info locals
@@ -300,7 +299,7 @@ Then we'll execute a few `info locals` and `step`'s:
 
 ![GDB session layout split](../assets/gdb-layout-split-3.png "GDB TUI layout split 3")
 
-At any point you can leave the TUI mode using the following command:
+Para abandonar el modo TUI :
 
 ```
 (gdb) tui disable
@@ -308,14 +307,13 @@ At any point you can leave the TUI mode using the following command:
 
 ![GDB session layout split](../assets/gdb-layout-split-4.png "GDB TUI layout split 4")
 
-> **NOTE** If the default GDB CLI is not to your liking check out [gdb-dashboard]. It uses Python to
-> turn the default GDB CLI into a dashboard that shows registers, the source view, the assembly view
-> and other things.
+> **NOTE** Si la interfaz de línea de comandos (CLI) de GDB predeterminada no te convence, prueba [gdb-dashboard].
+> Utiliza Python para convertir la CLI de GDB en un panel de control que muestra los registros, la vista del código fuente,
+> la vista del ensamblador y otras funciones. 
 
 [gdb-dashboard]: https://github.com/cyrus-and/gdb-dashboard#gdb-dashboard
 
-Don't close OpenOCD though! We'll use it again and again later on. It's better
-just to leave it running. If you want to learn more about what GDB can do, check out the section [How to use GDB](../appendix/2-how-to-use-gdb/).
+Si quiere consultar más sobre [Cómo usar GDB](../appendix/2-how-to-use-gdb/).
 
 
-What's next? The high level API I promised.
+Y ahora... La API prometida.
