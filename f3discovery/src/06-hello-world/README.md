@@ -1,17 +1,16 @@
 # Hello, world!
 
-> **HEADS UP** The "solder bridge" SB10 (see back of the board) on the STM32F3DISCOVERY, which is
-> required to use the ITM and the `iprint!` macros shown below, is **not** soldered by default
-> (see page 21 of the [User Manual][]).
-> (To be more accurate: this actually depends on the board revision. If you have an old version of
-> the board as the [old User Manual][User Manual v3] said, the SB10 was soldered. Check your board
-> to decide whether you need to fix it.)
+> **ATENCIÓN** El "puente de soldadura" SB10 (ver la parte posterior de la placa) del STM32F3DISCOVERY,
+> necesario para usar las macros ITM y `iprint!` que se muestran a continuación, **no** está soldado por defecto
+> (ver página 21 del [Manual de usuario][]).
+> (Para ser más precisos: esto depende de la versión de la placa. Si tienes una versión antigua de la placa, como indicaba el [Manual de usuario anterior][Manual de usuario v3],
+> el SB10 estaba soldado. Revisa tu placa para decidir si necesitas repararlo).
 
-> **TL;DR** You have two options to fix this: Either **solder** the solder bridge SB10 or connect a
-> female to female jumper wire between SWO and PB3 as shown in the picture below.
+> **OPCIONES**Tienes dos opciones para solucionar esto: soldar el puente de soldadura SB10 o conectar un cable puente hembra a hembra
+> entre SWO y PB3 como se muestra en la imagen a continuación
 
-[User Manual]: http://www.st.com/resource/en/user_manual/dm00063382.pdf
-[User Manual v3]: https://docs.rs-online.com/5192/0900766b814876f9.pdf
+[Manual de usuario]: http://www.st.com/resource/en/user_manual/dm00063382.pdf
+[Manual de usuario v3]: https://docs.rs-online.com/5192/0900766b814876f9.pdf
 
 <p align="center">
 <img height=640 title="Manual SWD connection" src="../assets/f3-swd.png">
@@ -19,45 +18,34 @@
 
 ---
 
-Just a little more of helpful magic before we start doing low level stuff.
-
-Blinking an LED is like the "Hello, world" of the embedded world.
-
-But in this section, we'll run a proper "Hello, world" program that prints stuff to your computer
-console.
-
-Go to the `06-hello-world` directory. There's some starter code in it:
-
+Hacer parpadear un LED es como el "Hola, mundo" del mundo de los microcontroladores.
+Pero en esta sección, ejecutaremos un programa de "Hola, mundo" que imprime información en la consola de tu ordenador.
+Vamos al directorio 06-hello-world del directorio principal f3discovery. Ya tiene algo de código para empezar con el:
 ``` rust
 {{#include src/main.rs}}
 ```
 
-The `iprintln` macro will format messages and output them to the microcontroller's *ITM*. ITM stands
-for Instrumentation Trace Macrocell and it's a communication protocol on top of SWD (Serial Wire
-Debug) which can be used to send messages from the microcontroller to the debugging host. This
-communication is only *one way*: the debugging host can't send data to the microcontroller.
+La macro `iprintln` dará formato a los mensajes y los enviará al ITM del microcontrolador. ITM significa Instrumentation Trace Macrocell 
+y es un protocolo de comunicación basado en SWD (Serial Wire Debug), que permite enviar mensajes desde el microcontrolador al host de 
+depuración. Esta comunicación es unidireccional: el host de depuración no puede enviar datos al microcontrolador. 
 
-OpenOCD, which is managing the debug session, can receive data sent through this ITM *channel* and
-redirect it to a file.
+OpenOCD, que gestiona la sesión de depuración, puede recibir los datos enviados a través de este canal ITM y redirigirlos a un archivo.
 
-The ITM protocol works with *frames* (you can think of them as Ethernet frames). Each frame has a
-header and a variable length payload. OpenOCD will receive these frames and write them directly to a
-file without parsing them. So, if the microntroller sends the string "Hello, world!" using the
-`iprintln` macro, OpenOCD's output file won't exactly contain that string.
+El protocolo ITM funciona con tramas (puedes considerarlas como tramas Ethernet). Cada trama tiene un encabezado y una carga útil de 
+longitud variable. OpenOCD recibirá estas tramas y las escribirá directamente en un archivo sin analizarlas. Por lo tanto, si el microcontrolador 
+envía la cadena "¡Hola, mundo!" mediante la macro `iprintln`, el archivo de salida de OpenOCD no contendrá exactamente esa cadena.
 
-To retrieve the original string, OpenOCD's output file will have to be parsed. We'll use the
-`itmdump` program to perform the parsing as new data arrives.
+Para recuperar la cadena original, será necesario analizar el archivo de salida de OpenOCD. Usaremos el programa `itmdump` para realizar el análisis 
+a medida que llegan nuevos datos.
 
-You should have already installed the `itmdump` program during the [installation chapter].
+Yá debería tener instalado el programa `itmdump` si realizó los ejercicios anteriores y se ha explicado en el capítulo de instalación [installation chapter].
 
 [installation chapter]: ../03-setup/index.html#itmdump
 
-In a new terminal, run this command inside the `/tmp` directory, if you are using a \*nix OS, or from
-within the `%TEMP%` directory, if you are running Windows. This should be the same directory from
-where you are running OpenOCD.
+En una nueva terminal, ejecute este comando dentro del directorio `/tmp`, si estás usando un sistema basado en *nix OS, o desde el directorio 
+`%TEMP%` si lo hace desde Windows.
 
-> **NOTE** It's very important that both `itmdump` and `openocd` are running
-from the same directory!
+> **NOTA** Es muy importante que tanto `itmdump`  como `openocd` se ejecuten desde el mismo directorio!
 
 ``` console
 $ # itmdump terminal
@@ -72,20 +60,18 @@ $ # both
 $ itmdump -F -f itm.txt
 ```
 
-This command will block as `itmdump` is now watching the `itm.txt` file. Leave this terminal open.
+Este comando bloqueará la terminal, ya que `itmdump` está monitoreando el archivo `itm.txt`. Deje esta terminal abierta.
 
-Make sure that the STM32F3DISCOVERY board is connected to your computer. Open another terminal
-from `/tmp` directory (on Windows `%TEMP%`) to launch OpenOCD similar as described in [chapter 3].
+Asegúrese de que la placa STM32F3DISCOVERY esté conectada a su ordenador. Abra otra terminal y desde el directorio `/tmp` 
+(en Windows `%TEMP%`) ejecute OpenOCD como se explicó en el [chapter 3].
 
 [chapter 3]: ../03-setup/verify.html#first-openocd-connection
 
-Alright. Now, let's build the starter code and flash it into the microcontroller.
+Vamos a compilar el código de inicio y grabarlo en el chip.
 
-We will now build and run the application, `cargo run`. And step through it using `next`.
-Since `openocd.gdb` contains the `monitor` commands in `openocd.gdb` OpenOCD will redirect
-the ITM output to itm.txt and `itmdump` will write it to its terminal window. Also, it setup
-break points and stepped through the trampoline we are at the first executable
-statement in `fn main()`:
+Compilaremos y ejecutaremos la aplicación, `cargo run`. Vamos paso a paso usando `next`. Desde que se añadió a `openocd.gdb` los comandos 
+`monitor`, OpenOCD redirigirá la salida de ITM hacia itm.txt y el programa `itmdump` lo escribirá en su terminal. También se configuran 
+los break points y los suficientes step hasta llegar al trampolin donde tenemos la primera línea ejecutable en `fn main()`:
 
 ``` console
 ~/embedded-discovery/src/06-hello-world
@@ -113,32 +99,27 @@ hello_world::__cortex_m_rt_main () at ~/embedded-discovery/src/06-hello-world/sr
 (gdb)
 ```
 
-Now issue a `next` command which will execute `aux6::init()` and
-stop at the next executable statement in `main.rs`, which
-positions us at line 12:
+Ahora introduzca un comando `next` que ejecutará `aux6::init()` y se detendrá en la siguiente declaración 
+ejecutable en `main.rs`, que nos posiciona en la línea 12:
 
 ``` text
 (gdb) next
 12	    iprintln!(&mut itm.stim[0], "Hello, world!");
 ```
 
-Then issue another `next` command which will execute
-line 12, executing the `iprintln` and stop at line 14:
+Introduzco otro comando `next` que ejecutará la línea 12, que ejecutará `iprintln` y se para en la línea 14:
 
 ``` text
 (gdb) next
 14	    loop {}
 ```
 
-Now since `iprintln` has been executed the output on the `itmdump`
-terminal window should be the `Hello, world!` string:
-
+Ahora debe aparecer la frase `Hello, world!` en la terminal de `itmdump`:
 ``` console
 $ itmdump -F -f itm.txt
 (...)
 Hello, world!
 ```
 
-Awesome, right? Feel free to use `iprintln` as a logging tool in the coming sections.
-
-Next: That's not all! The `iprint!` macros are not the only thing that uses the ITM. `:-)`
+Genial, ¿verdad? Puedes usar `iprintln` como herramienta de registro en las próximas secciones.
+A continuación: Pero eso no es todo! Las macros `iprintln` No son las únicas que usan ITM. :-)
