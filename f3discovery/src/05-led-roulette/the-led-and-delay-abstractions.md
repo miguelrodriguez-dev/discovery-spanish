@@ -1,4 +1,4 @@
-# The `Led` and `Delay` abstractions
+# Uso de `Led` y `Delay`
 
 Ahora, voy a presentar dos abstracciones de alto nivel que utilizaremos para implementar la aplicación de ruleta LED.
 La biblioteca auxiliar `aux5` expone una función de inicialización llamada `init`. Al llamarla, esta función devuelve 
