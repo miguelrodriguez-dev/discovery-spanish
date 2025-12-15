@@ -1,37 +1,34 @@
 # The `Led` and `Delay` abstractions
 
-Now, I'm going to introduce two high level abstractions that we'll use to implement the LED roulette
-application.
+Ahora, voy a presentar dos abstracciones de alto nivel que utilizaremos para implementar la aplicación de ruleta LED.
+La biblioteca auxiliar `aux5` expone una función de inicialización llamada `init`. Al llamarla, esta función devuelve 
+dos valores empaquetados en una tupla: un valor `Delay` y un valor `LedArray`.
 
-The auxiliary crate, `aux5`, exposes an initialization function called `init`. When called this
-function returns two values packed in a tuple: a `Delay` value and a `LedArray` value.
+`Delay` se puede usar para bloquear el programa durante una cantidad específica de milisegundos.
 
-`Delay` can be used to block your program for a specified amount of milliseconds.
-
-`LedArray` is an array of eight `Led`s. Each `Led` represents one of the LEDs on the F3 board,
-and exposes two methods: `on` and `off` which can be used to turn the LED on or off, respectively.
-
-Let's try out these two abstractions by modifying the starter code to look like this:
+`LedArray` es un array de ocho LEDs. Cada LED representa uno de los LEDs de la placa F3 y expone dos métodos: `on` y `off`, 
+que se pueden usar para encender o apagar el LED, respectivamente.
+Probemos estas dos abstracciones modificando el código inicial para que se vea así:
 
 ``` rust
 {{#include examples/the-led-and-delay-abstractions.rs}}
 ```
 
-Now build it:
+Ahora lo compilamos:
 ``` console
 cargo build
 ```
 
-> **NOTE**: It's possible to forget to rebuild the program *before* starting a GDB session; this
-> omission can lead to very confusing debug sessions. To avoid this problem you can call just `cargo run`
-> instead of `cargo build`. The `cargo run` command will build *and* start a debug
-> session ensuring you never forget to recompile your program.
+> **NOTA**: Es posible olvidar recompilar el programa antes de iniciar una sesión de GDB;
+> esta omisión puede generar sesiones de depuración muy confusas. Para evitar este problema,
+> puedes usar simplemente `cargo run` en lugar de `cargo build`. El comando `cargo run` compilará
+> el programa e iniciará una sesión de depuración, asegurándote que nunca olvides recompilarlo.
 
-Now we'll run and repeat the flashing procedure as we did in the previous section
-but with the new program. I'll let you type in the `cargo run`, *this will get easier shortly*. :)
+Ahora repetiremos el procedimiento de flasheo como en la sección anterior, pero con el nuevo programa. 
+Te dejo que escribas el comando `cargo run`; pronto te resultará más fácil. :)
 
-> **NOTE**: Don't forget to start ```openocd``` (debugger) on a separate terminal. 
-> Otherwise `target remote :3333` won't work!
+> **NOTA**: No olvides iniciar la sesión de ```openocd``` (debugger) en otra terminal. De lo contrario
+> `target remote :3333` no funcionará.
 
 ``` console
 $ cargo run
@@ -69,8 +66,8 @@ led_roulette::__cortex_m_rt_main () at ~/embedded-discovery/src/05-led-roulette/
 (gdb)
 ```
 
-OK. Let's step through the code. This time, we'll use the `next` command instead of `step`. The
-difference is that the `next` command will step *over* function calls instead of going inside them.
+Usamos ahora el comando `next` en vez de `step`. La diferencia radica en que `next` se salta la llamada a la función
+en vez de entrar en la función.
 ```
 (gdb) next
 11          let half_period = 500_u16;
@@ -85,10 +82,9 @@ difference is that the `next` command will step *over* function calls instead of
 15              delay.delay_ms(half_period);
 ```
 
-After executing the `leds[0].on().ok()` statement, you should see a red LED, the one pointing North,
-turn on.
+Despueés de ejecutar la instrucción `leds[0].on().ok()` , debería de ver un LED rojo encenderse marcado como Norte.
 
-Let's continue stepping over the program:
+Continuemos avanzando en el programa:
 
 ```
 (gdb) next
@@ -98,22 +94,20 @@ Let's continue stepping over the program:
 18              delay.delay_ms(half_period);
 ```
 
-The `delay_ms` call will block the program for half a second but you may not notice because the
-`next` command also takes some time to execute. However, after stepping over the `leds[0].off()`
-statement you should see the red LED turn off.
+La llamada a la función `delay_ms` bloqueará el programa durante medio segundo pero es casi imperceptible, porque el comando 
+`next` también toma un tiempo en ejecutarse. Sin embargo, despues de hacer otro paso, ya sobre `leds[0].off()`
+debería apagarse el LED Norte.
 
-You can already guess what this program does. Let it run uninterrupted using the `continue` command.
+Si ejecutas `continue` verás parpadear el LED Norte.
 
 ```
 (gdb) continue
 Continuing.
 ```
 
-Now, let's do something more interesting. We are going to modify the behavior of our program using
-GDB.
+Ahora, hagamos algo más interesante. Vamos a modificar nuestro programa desde la sesión de GDB.
 
-First, let's stop the infinite loop by hitting `Ctrl+C`. You'll probably end up somewhere inside
-`Led::on`, `Led::off` or `delay_ms`:
+Lo primero es parar el programa con `Ctrl+C`. Probablemente se parará en algún punto entre `Led::on`, `Led::off` o `delay_ms`:
 
 ```
 ^C
@@ -122,22 +116,18 @@ Program received signal SIGINT, Interrupt.
     at ~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/ptr/mod.rs:1053
 ```
 
-In my case, the program stopped its execution inside a `read_volatile` function. GDB output shows
-some interesting information about that: `core::ptr::read_volatile (src=0xe000e010)`. This means
-that the function comes from the `core` crate and that it was called with argument `src =
-0xe000e010`.
+En mi caso, el programa se paró dentro de una función `read_volatile`. La salida de GDB muestra una información interesante 
+sobre: `core::ptr::read_volatile (src=0xe000e010)`. Esto significa que la función viene del crate `core` y que fué llamada 
+con el argumento `src = 0xe000e010`.
 
-Just so you know, a more explicit way to show the arguments of a function is to use the `info args`
-command:
+Ahora vas a conocer una forma más explícita de mostrar los argumentos de una función, usando el comando `info args`:
 
 ```
 (gdb) info args
 src = 0xe000e010
 ```
 
-Regardless of where your program may have stopped you can always look at the output of the
-`backtrace` command (`bt` for short) to learn how it got there:
-
+Independientemente de dónde se haya detenido tu programa, siempre puedes consultar la salida del comando `backtrace` (`bt` para abreviara para saber cómo llegó hasta allí:
 ```
 (gdb) backtrace
 #0  0x08003434 in core::ptr::read_volatile<u32> (src=0xe000e010)
@@ -156,12 +146,10 @@ Regardless of where your program may have stopped you can always look at the out
 #8  0x08000206 in led_roulette::__cortex_m_rt_main_trampoline () at src/05-led-roulette/src/main.rs:7
 ```
 
-`backtrace` will print a trace of function calls from the current function down to main.
+`backtrace`imprimirá un seguimiento de las llamadas a funciones desde la función actual hasta la función principal.
 
-Back to our topic. To do what we are after, first, we have to return to the `main` function. We can
-do that using the `finish` command. This command resumes the program execution and stops it again
-right after the program returns from the current function. We'll have to call it several times.
-
+Volvamos al tema. Para lograr lo que queremos, primero debemos regresar a la función main. Podemos hacerlo con el comando 
+`finish`. Este comando reanuda la ejecución del programa y la detiene justo después de que este finaliza su ejecución. Tendremos que llamarlo varias vece
 ```
 (gdb) finish
 Run till exit from #0  0x08003434 in core::ptr::read_volatile<u32> (src=0xe000e010)
@@ -187,14 +175,14 @@ Run till exit from #0  0x08002f80 in stm32f3xx_hal::delay::{{impl}}::delay_ms (s
 15              delay.delay_ms(half_period);
 ```
 
-We are back in `main`. We have a local variable in here: `half_period`
+Ahora que estamos en `main`, tenemos una variable local que podemos consultar: `half_period`
 
 ```
 (gdb) print half_period
 $3 = 500
 ```
 
-Now, we are going to modify this variable using the `set` command:
+Vamos a modificar esta variable con el comando `set`:
 
 ```
 (gdb) set half_period = 100
@@ -203,10 +191,10 @@ Now, we are going to modify this variable using the `set` command:
 $5 = 100
 ```
 
-If you let program run free again using the `continue` command, you **might** see that the LED will
-blink at a much faster rate now, but more likely the blink rate didn't change. **What happened?**
+Si dejas tu programa se ejecute líbremente con el comando `continue`, podrías ver que el LED parpadea más rápido, 
+pero por raro que nos parezca, el tiempo de parpadeo no ha cambiado. ¿Qué ha pasado?
+Vamos a parar el programa con `Ctrl+C` y establecer un nuevo brakpoint en `main:14`.
 
-Let's stop the program with `Ctrl+C` and then set a break point at `main:14`.
 ``` console
 (gdb) continue
 Continuing.
@@ -217,7 +205,7 @@ core::cell::UnsafeCell<u32>::get<u32> (self=0x20009fa4)
 1711        pub const fn get(&self) -> *mut T {
 ```
 
-Then set a break point at `main.rs:14` and `continue`
+Ponemos el break point en `main.rs:14` y ejecutamos `continue`
 
 ``` console
 (gdb) break main.rs:14
@@ -229,11 +217,10 @@ Breakpoint 2, led_roulette::__cortex_m_rt_main () at src/05-led-roulette/src/mai
 14              leds[0].on().ok();
 ```
 
-Now open your terminal window so it's about 80 lines long an 170 characters wide if possible.
-> **NOTE**: If you can't open the terminal that large, no problem you'll just see
-> `--Type <RET> for more, q to quit, c to continue without paging--` so just type return
-> until you see the `(gdb)` prompt. Then scroll your terminal window to
-> see the results.
+Ahora, abra su terminal con 80 lineas de longitud y 170 caracteres de ancho si es posible.
+> **NOTA**: No pasa nada si no puede abrir la terminal con ese tamaño, se le informa con 
+> `--Type <RET> for more, q to quit, c to continue without paging--` así que pulsando la
+> tecla `enter` y verá el prompt de  (gdb) . A continuación puede moverse por la terminal para ver los resultados.
 
 ``` console
 (gdb) disassemble /m
@@ -295,11 +282,9 @@ Dump of assembler code for function _ZN12led_roulette18__cortex_m_rt_main17h51e7
 
 End of assembler dump.
 ```
-
-In the above dump the reason the delay didn't change was because the compiler
-recognized that half_period didn't change and instead in the two places where
-`delay.delay_ms(half_period);` is called we see `mov.w r1, #500`. So changing the
-value of `half_period` does nothing!
+En la salida de arriba, la causa por la que el retardo no se ha aplicado es debido a que el compilador reconoció que 
+`half_period` no cambió y, en cambio, en los dos lugares donde se llama a `delay.delay_ms(half_period)`, vemos 
+`mov.w r1, #500`. ¡Así que cambiar el valor de la variable `half_period` no tiene ningún efecto!
 
 ``` console
    0x08000244 <+60>:    mov.w   r1, #500        ; 0x1f4
@@ -315,7 +300,7 @@ value of `half_period` does nothing!
    0x08000262 <+90>:    bl      0x8002f5c <stm32f3xx_hal::delay::{{impl}}::delay_ms>
 ```
 
-One solution to the problem is to wrap `half_period` in a `Volatile` as shown below.
+Una solución es envolver a `half_period` en un `Volatile` :
 
 ``` console
 #![deny(unsafe_code)]
@@ -343,7 +328,7 @@ fn main() -> ! {
 
 ```
 
-Edit `Cargo.toml` adding `volatile = "0.4.3"` in the `[dependencies]` section.
+Edite `Cargo.toml` para añadir `volatile = "0.4.3"` en la sección `[dependencies]`.
 
 ``` console
 [dependencies]
@@ -351,9 +336,8 @@ aux5 = { path = "auxiliary" }
 volatile = "0.4.3"
 ```
 
-With the above code using `Volatile` you can now change `half_period` and
-you'll be able to experiment with different values. Here is the list of
-commands followed by an explanation; `# xxxx` to demonstrate.
+Con el código de arriba utilizando `Volatile` puedes cambiar la variable `half_period` y
+experimentarás con diferentes valores. Te dejo una lista de comandos con una breve explicación; `# xxxx`.
 
 ```
 $ cargo run --target thumbv7em-none-eabihf   # Compile and load the program into gdb
@@ -377,10 +361,9 @@ $ cargo run --target thumbv7em-none-eabihf   # Compile and load the program into
 (gdb) quit                          # Quit gdb
 ```
 
-The critical changes are at lines 13, 17 and 20 in the source code which
-you can see in the disassembly. At 13 we create `v_half_period` and then
-`read()` its value in lines 17 and 20. This means that when we `set half_period = 2000`
-the led will now be on for 2 seconds then off for 2 seconds.
+Los cambios críticos están en las líneas 13, 17 y 20 en el código fuente, en el cual tu puedes ver en la salida del desensambldo. 
+En la línea 13 creamos `v_half_period` y luego `read()` su valor en las líneas 17 y 20. Esto significa que cuando hacemos 
+`set half_period = 2000` el LED parpadeará con una cadencia de 2 segundos tanto encendido como apagado.
 
 ``` console
 $ cargo run --target thumbv7em-none-eabihf
@@ -546,7 +529,6 @@ Ending remote debugging.
 [Inferior 1 (Remote target) detached]
 ```
 
-Question! What happens if you start lowering the value of `half_period`? At what value of
-`half_period` you can no longer see the LED blink?
+Bien, y ¿Qué ocurriría si pongo un valor de retardo muy bajo en `half_period`? ¿Cuál es el valor más bajo al que deja de parpadear?
 
-Now, it's your turn to write a program.
+En la siguiente sección, es tu turno para escribir un programa.
