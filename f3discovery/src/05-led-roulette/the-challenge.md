@@ -1,34 +1,30 @@
-# The challenge
+# El reto
 
-You are now well armed to face a challenge! Your task will be to implement the application I showed
-you at the beginning of this chapter.
-
-Here's the GIF again:
+¡Ya estás preparado para afrontar un reto! Tu tarea consistirá en implementar la aplicación que te mostré al principio de este capítulo.
+De nuevo te muestro el GIF:
 
 <p align="center">
 <img src="https://i.imgur.com/0k1r2Lc.gif">
 </p>
 
-Also, this may help:
+Esto también puede ayudar:
 
 <p align="center">
 <img class="white_bg" src="../assets/timing-diagram.png">
 </p>
 
-This is a timing diagram. It indicates which LED is on at any given instant of time and for how long
-each LED should be on. On the X axis we have the time in milliseconds. The timing diagram shows a
-single period. This pattern will repeat itself every 800 ms. The Y axis labels each LED with a
-cardinal point: North, East, etc. As part of the challenge you'll have to figure out how each
-element in the `Leds` array maps to these cardinal points (hint: `cargo doc --open` `;-)`).
+Esto es un diagrama de tiempos. Indica qué LED está encendido en un instante de tiempo y duarante cuánto tiempo está encendido 
+cada uno. En el eje `X` tenemos el tiempo en milisegundos. El diagrama de tiempos muestra un periodo completo. Este patrón se repite 
+cada 800 ms. En el eje `Y` tenemos cada uno de lo LED marcados con los puntos cardinales (como en la placa de desarrollo): 
+Norte, Este, etc. Como parte del desafío, tendrás que averiguar cómo se asigna cada elemento de la matriz Leds a estos puntos cardinales 
+(pista: `cargo doc --open` ;-)).
 
-Before you attempt this challenge, let me give you one additonal tip. Our GDB sessions always involve
-entering the same commands at the beginning. We can use a `.gdb` file to execute some commands
-right after GDB is started. This way you can save yourself the effort of having to enter them
-manually on each GDB session.
+Antes de empezar el desafío, déjame decirte un truco más. En nuestra sesión de GDB siempre implica introducir los mismos comandos al principio. 
+Podemos usar un archivo `.gdb` para ejecutar algunos comandos justo después de iniciar GDB. De esta forma, te ahorras el trabajo de tener que 
+introducirlos manualmente en cada sesión de GDB.
 
-As it turns out we've already created `../openocd.gdb` and you can see it's doing
-pretty much what we did in the previous section plus a few other commands. Look at
-the comments for additional information:
+Resulta que ya hemos creado `../openocd.gdb` y, como puedes ver, hace prácticamente lo mismo que en la sección anterior, además de algunos comandos 
+adicionales. Consulta los comentarios para obtener más información.
 
 ``` console
 $ cat ../openocd.gdb
@@ -71,13 +67,13 @@ step
 
 ```
 
-Now we need to modify the `../.cargo/config.toml` file to execute `../openocd.gdb`
+Necesitamos modificar `../.cargo/config.toml` para ejecutar `../openocd.gdb`
 ``` console
 nano ../.cargo/config.toml
 ```
 
-Edit your `runner` command ` -x ../openocd.gdb`.
-Assuming you're using `arm-none-eabi-gdb` the diff is:
+Edite el comando `runner` para su distribución Linux ` -x ../openocd.gdb`.
+Suponiendo que utulizas `arm-none-eabi-gdb` el diff es:
 ``` diff
 ~/embedded-discovery/src/05-led-roulette
 $ git diff ../.cargo/config.toml
@@ -94,8 +90,8 @@ index ddff17f..02ac952 100644
  rustflags = [
 ```
 
-And the full contents of `../.cargo/config.toml`, again
-assuming `arm-none-eabi-gdb`, is:
+Y el contenido completo `../.cargo/config.toml`, de nuevo asumiendo
+que usas `arm-none-eabi-gdb`, es:
 ``` toml
 [target.thumbv7em-none-eabihf]
 runner = "arm-none-eabi-gdb -q -x ../openocd.gdb"
@@ -110,11 +106,8 @@ target = "thumbv7em-none-eabihf"
 
 ```
 
-With that in place, you can now use a simple `cargo run` command which will build
-the ARM version of the code and run the `gdb` session. The `gdb` session will
-automatically flash the program and jump to the beginning of `main` as it `step`'s
-through the entry trampoline:
-
+Una vez hecho esto, ya puedes usar un simple comando `cargo run` que compilará la versión ARM del código y ejecutará la sesión de gdb. 
+La sesión de gdb programará el chip automáticamente y saltará al principio de `main` con los pasos `step` necesarios hasta llegar al punto de salto.
 ``` console
 cargo run
 ```
@@ -144,9 +137,4 @@ led_roulette::__cortex_m_rt_main () at ~/embedded-discovery/src/05-led-roulette/
 
 ## Fork the discovery book
 
-If you haven't already ready, it's probably a good idea to fork
-the [embedded discovery book](https://github.com/rust-embedded/discovery) so you
-can save your changes in your own branch of your fork. We suggest creating
-your own branch and leaving the `master` branch alone so the `master` branch
-of your fork can stay in sync with the upstream repo. Also, it allows you to
-more easily create PR's and improve this book, **thank you in advance**!
+Si aún no lo has hecho, te recomendamos crear una bifurcación del libro [embedded discovery book](https://github.com/rust-embedded/discovery) para guardar tus cambios en tu propia rama. Sugerimos crear tu propia rama y no modificar la rama principal master para que esta se mantenga sincronizada con el repositorio original. Además, esto te permitirá crear solicitudes PR más fácilmente y mejorar este libro. ¡Gracias de antemano!
