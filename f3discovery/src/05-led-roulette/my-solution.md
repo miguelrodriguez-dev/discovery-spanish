@@ -1,20 +1,18 @@
-# My solution
+# Mi solución
 
-What solution did you come up with?
+¿Qué solución se te ocurrió?
 
-Here's mine:
-
+Esta es la mía:
 ``` rust
 {{#include examples/my-solution.rs}}
 ```
 
-One more thing! Check that your solution also works when compiled in "release" mode:
-
+Una cosa más, comprueba que tu solución también funciona cuando se compila en modo `release`:
 ``` console
 $ cargo build --target thumbv7em-none-eabihf --release
 ```
 
-You can test it with this `gdb` command:
+Puedes probarlos con los comandos de `gdb`:
 
 ``` console
 $ # or, you could simply call `cargo run --target thumbv7em-none-eabihf --release`
@@ -22,8 +20,7 @@ $ arm-none-eabi-gdb target/thumbv7em-none-eabihf/release/led-roulette
 $ #                                              ~~~~~~~
 ```
 
-Binary size is something we should always keep an eye on! How big is your solution? You can check
-that using the `size` command on the release binary:
+No olvide nunca el tamaño del binario. Para ello utiliza el comando `size` en el binario en modo release:
 
 ``` console
 $ # equivalent to size target/thumbv7em-none-eabihf/debug/led-roulette
@@ -77,14 +74,13 @@ section              size        addr
 Total              209601
 ```
 
-> **NOTE** The Cargo project is already configured to build the release binary using LTO.
+> **NOTA** El proyecto Cargo ya está configurado para compilar el binario en modo release usando LTO.
 
-Know how to read this output? The `text` section contains the program instructions. It's around 5.25KB
-in my case. On the other hand, the `data` and `bss` sections contain variables statically allocated
-in RAM (`static` variables). A `static` variable is being used in `aux5::init`; that's why it shows 4
-bytes of `bss`.
+¿Sabe leer esta salida? La sección `text` contiene las instrucciones del programa. Esta pesa alrededor de 5.25KB 
+según la salida del modo `release`. Por otra parte, las secciones `data` y `bss` contienen variables estáticas 
+localizadas en la RAM (`static` variablese). Una variable `static` se está utilizando en `aux5::init`; por esa razón 
+se muestran  4 bytes de `bss`.
 
-One final thing! We have been running our programs from within GDB but our programs doesn't depend on
-GDB at all. You can confirm this be closing both GDB and OpenOCD and then resetting the board by
-pressing the black button on the board. The LED roulette application will run without intervention
-of GDB.
+¡Una última cosa! Hemos estado ejecutando los programas desde dentro de GDB pero nuestros programas no dependen en absoluto 
+de GDB. Esto se confirma muy rápido si cierra tanto GDB como OpenOCD y presiona el botón de reset (negro) de su placa F3. 
+El programa se ejecuta perfectamente solo sin intervención de GDB.
