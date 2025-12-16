@@ -76,6 +76,8 @@ Si ya tenías instalado rustup compruebe que está en el canal estable y las her
 $ rustc -V
 rustc 1.31.0 (abe02cefd 2018-12-04)
 ```
+> ***NOTA*** Cierre ahora la terminal y vuelva a abrirla. Si no lo hace, no se actualiza el path
+> y no podrá instalar el paso siguiente. También necesitará instalr GCC en su distribución.
 
 ### `itmdump`
 
