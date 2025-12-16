@@ -1,8 +1,8 @@
 # `panic!`
 
-The `panic!` macro also sends its output to the ITM!
+La macro `panic!` también envía su salida hacia el ITM!
 
-Change the `main` function to look like this:
+Cambia solo la función `main` así:
 
 ``` rust
 #[entry]
@@ -11,18 +11,46 @@ fn main() -> ! {
 }
 ```
 
-Before running one other suggestion, I find it inconvenient to have to
-confirm when quitting gdb. Add the following file in your home
-directory `~/.gdbinit` so that it quits immediately:
+Cuando salimos de la sesión GDB, siempre nos pregunta si queremos salir, pues podemos eliminar
+esa confirmación añadinedo un archivo a su /home (ojo, al /home/tu_usurio) denominado `~/.gdbinit` :
 
 ``` console
-$ cat ~/.gdbinit
+$ nano ~/.gdbinit
 define hook-quit
   set confirm off
 end
 ```
 
-OK, now use `cargo run` and it stops at the first line of `fn main()`:
+Bien, ahora ejecutamos una sesión de openocd en la carpeta temporal `/tmp` y otra sesión para ejecutar 
+el ITM y por último, en otra terminal, ejecutaremos `cargo run`.
+
+Para ITM:
+
+``` console
+$ # itmdump terminal
+
+$ # *nix
+$ cd /tmp && touch itm.txt
+
+$ # Windows
+$ cd %TEMP% && type nul >> itm.txt
+
+$ # both
+$ itmdump -F -f itm.txt
+```
+
+Y para la sesión de openocd:
+
+``` console
+ # *nix
+$ cd /tmp
+
+$ # Windows
+$ cd %TEMP% 
+
+$ # both
+$ openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
+```
 
 ``` console
 $ cargo run
@@ -49,13 +77,12 @@ hello_world::__cortex_m_rt_main () at ~/embedded-discovery/src/06-hello-world/sr
 (gdb)
 ```
 
-We'll use short command names to save typing, enter `c` then the `Enter` or `Return` key:
-```
+``` console
 (gdb) c
-Continuing.
+Continuing
 ```
 
-If all is well you'll see some new output in the `itmdump` terminal.
+Si todo ha salido bien, verá en la terminal de  `itmdump` el mensaje correpondiente.
 
 ``` console
 $ # itmdump terminal
@@ -63,7 +90,7 @@ $ # itmdump terminal
 panicked at 'Hello, world!', src/06-hello-world/src/main.rs:10:5
 ```
 
-Then type `Ctrl-c` which breaks out of a loop in the runtime:
+Pulse `Ctrl-c` que rompe el bucle en ejecución:
 ``` text
 ^C
 Program received signal SIGINT, Interrupt.
@@ -71,9 +98,7 @@ Program received signal SIGINT, Interrupt.
 57	        atomic::compiler_fence(Ordering::SeqCst);
 ```
 
-Ultimately, `panic!` is just another function call so you can see it leaves behind
-a trace of function calls. This allows you to use `backtrace` or just `bt` and to see
-call stack that caused the panic:
+En definitiva, `panic!` es simplemente otra llamada a función, por lo que puedes ver que deja un rastro de llamadas a función. Esto te permite usar `backtrace` o simplemente `bt` y ver la pila de llamadas que causó el pánico:
 
 ``` text
 (gdb) bt
@@ -84,10 +109,13 @@ call stack that caused the panic:
 #4  0x080001f4 in hello_world::__cortex_m_rt_main_trampoline () at src/06-hello-world/src/main.rs:8
 ```
 
-Another thing we can do is catch the panic *before* it does the logging.
-So we'll do several things; reset to the beginning, disable breakpoint 1,
-set a new breakpoint at `rust_begin_unwind`, list the break points and then continue:
+Otra cosa que podemos hacer es atrapar el fallo tipo panic antes que este haga el logging. Podríamos resetear , lo que iría al principio, deshabilitar el breakpoint 1, establecer un nuevo break point con `break rust_begin_unwind` , listar los break points y continuar.
+Para poner un break point conociendo la dirección, se coloca `break *dirección`. Por ejemplo, si la dirección a colocar es 0x0800077c entonces escriba:
 
+``` text
+(gdb) break *0x0800077c
+
+```
 ``` text
 (gdb) monitor reset halt
 Unable to match requested speed 1000 kHz, using 950 kHz
@@ -119,13 +147,9 @@ Continuing.
 Breakpoint 4, panic_itm::panic (info=0x20009fa0) at ~/.cargo/registry/src/github.com-1ecc6299db9ec823/panic-itm-0.4.2/src/lib.rs:47
 47          interrupt::disable();
 ```
-
-You'll notice that nothing got printed on the `itmdump` console this time. If
-you resume the program using `continue` then a new line will be printed.
-
-In a later section we'll look into other simpler communication protocols.
-
-Finally, enter the `q` command to quit and it quits immediately without asking for confirmation:
+Notará que nada se imprime en la terminal de `itmdump` . Si vuelve a introducir `continue` aparecerá una nueva línea en pantalla.
+En una sección posterior analizaremos otros protocolos de comunicación más simples.
+Por último, escriba el comando `q` (abreviatura de `quit`) para salir y debería hacerlo de forma inmediata, sin confirmación.
 
 ``` text
 (gdb) q
@@ -134,10 +158,9 @@ Ending remote debugging.
 [Inferior 1 (Remote target) detached]
 ```
 
-As an even shorter sequence you can type `Ctrl-d`, which eliminates
-one keystroke!
+Como secuencia aún más corta, puedes escribir `Ctrl-d`, ¡lo que elimina una pulsación de tecla!
 
-> **NOTE** In this case the `(gdb)` prompt is overwritten with `quit)`
+> **NOTA** En este caso el prompt de `(gdb)` se sustituye por `quit)`
 
 ``` text
 quit)
