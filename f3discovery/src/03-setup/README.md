@@ -156,13 +156,13 @@ $ cargo run
 Hello, world!
 
 ~/test-size (main)
-$ cargo size -- --version
-    Finished dev [unoptimized + debuginfo] target(s) in 0.00s
+cargo size -- --version
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+/home/user/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/bin/llvm-size
 LLVM (http://llvm.org/):
-  LLVM version 11.0.0-rust-1.50.0-stable
+  LLVM version 21.1.3-rust-1.92.0-stable
   Optimized build.
-  Default target: x86_64-unknown-linux-gnu
-  Host CPU: znver2
+
 ```
 
 ### Instalaciones específicas para cada sistema operativo
