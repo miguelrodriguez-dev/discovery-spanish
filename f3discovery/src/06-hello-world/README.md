@@ -6,7 +6,7 @@
 > (Para ser más precisos: esto depende de la versión de la placa. Si tienes una versión antigua de la placa, como indicaba el [Manual de usuario anterior][Manual de usuario v3],
 > el SB10 estaba soldado. Revisa tu placa para decidir si necesitas repararlo).
 
-> **OPCIONES**Tienes dos opciones para solucionar esto: soldar el puente de soldadura SB10 o conectar un cable puente hembra a hembra
+> **OPCIONES** Tienes dos opciones para solucionar esto: soldar el puente de soldadura SB10 o conectar un cable puente hembra a hembra
 > entre SWO y PB3 como se muestra en la imagen a continuación
 
 [Manual de usuario]: http://www.st.com/resource/en/user_manual/dm00063382.pdf
