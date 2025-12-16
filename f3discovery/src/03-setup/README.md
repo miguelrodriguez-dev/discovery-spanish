@@ -79,6 +79,24 @@ rustc 1.31.0 (abe02cefd 2018-12-04)
 > ***NOTA*** Cierre ahora la terminal y vuelva a abrirla. Si no lo hace, no se actualiza el path
 > y no podrá instalar el paso siguiente. También necesitará instalr GCC en su distribución.
 
+Para Fedora:
+
+``` console
+sudo dnf install gcc
+``` 
+
+Para Debian
+
+``` console
+sudo apt install gcc
+```
+
+En Arch Linux está instalado de forma predeterminada
+
+``` console
+sudo pacman -S gcc
+``` 
+
 ### `itmdump`
 
 
@@ -99,25 +117,6 @@ Instala `llvm-tools`
 ``` console
 rustup component add llvm-tools
 ```
-Si le dá error de que falta un compilador cc o c, deberá instalar gcc para su distribución:
-
-Para Fedora:
-
-``` console
-sudo dnf install gcc
-``` 
-
-Para Debian
-
-``` console
-sudo apt install gcc
-```
-
-En Arch Linux está instalado de forma predeterminada
-
-``` console
-sudo pacman -S gcc
-``` 
 
 Ahora instala `cargo-binutils`
 ``` console
