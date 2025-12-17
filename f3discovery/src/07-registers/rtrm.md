@@ -73,7 +73,7 @@ Como dice el manual, los bits que van del 0 al 15 se utilizan para poner a 1 la 
 Para que tengamos una referencia gŕafica de lo arriba expuesto, pongo una babla del estado de los bits de este registro. Podrás observar que están alineados los pines 9 y 25 (para set y reset respectivamente), al igual que el resto. Por esta razón, en nuestro programa sumamos 16 al valor del bit inferior para referirnos a su homólogo en el bit superior. Es decir, si pongo a 1 la salida 9, utilizo el bit BS9 colocándolo a 1, pero si acto seguido quiero ponerlo a cero, tengo que usar su homologo, que está 16 bits más arriba, osea el BR25 y poner este bit ( BR25)  a 1:
 
 ```
-T -> 31   30   29   28   27   26  25  24  23  22   21  20  19  18  17  16
+BIT -> 31   30   29   28   27   26  25  24  23  22   21  20  19  18  17  16
 W/R    w    w    w    w    w     w   w   w   w   w   w   w   w   w   w   w
       BR15 BR14 BR13 BR12 BR11 BR10 BR9 BR8 BR7 BR6 BR5 BR4 BR3 BR2 BR1 BR0
 
