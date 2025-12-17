@@ -44,9 +44,7 @@ Si no ha compilado y ejecutado el programa todavía, es hora de hacerlo. Recuerd
 En la terminal y direcotiro /tmp para openocd:
 
 ``` console
-nocd -f interface/stlink.cfg -f target/stm32f3x.cfg
-
-E
+openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
 ```
 
 En otra terminal pero en el mismo directorio /tmp que se ha ejecutado openocd:
