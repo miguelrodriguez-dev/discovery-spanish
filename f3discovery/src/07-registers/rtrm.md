@@ -41,10 +41,20 @@ Este es el registro donde estamos escribiendo. Este registro es de solo escritur
 En la parte superior de dicho registro, que va desde el bit 16 hasta el 31, se utiliza para poner a 0 el bit que queremos, y la parte inferior del registro, se utiliza para poner a 1 el bit que queremos. Pero no te confundas, poner un 1 en cualquier bit de la parte alta ( 16 a 31 ) reseteará ese bit, osea, lo pondrá a 0. Mientras que si pones a 1 cualquier bit de la parte baja (0 a 15) pondrá ese pin a 1. Esto quiere decir, que tanto para poner un reset se necesita un 1, y para poner un 1 en la salida, se necesita poner un 1 en el bit de la zona baja del registro. Así lo han montado el fabricante:).
 
 Si no ha compilado y ejecutado el programa todavía, es hora de hacerlo. Recuerda que debes iniciar una sesión de openocd, otra de itmdump (ambas en el directorio temporal) y por supuesto, la terminal donde se ejecutará "cargo run". Una vez hecho esto, nos situamos en la línea 16 con el comando `next`. También vamos a ver un nuevo comando denominado `examine` o `x`:
+En la terminal y direcotiro /tmp para openocd:
 
+``` console
+nocd -f interface/stlink.cfg -f target/stm32f3x.cfg
+
+E
 ```
-(gdb) next
-16              *(GPIOE_BSRR as *mut u32) = 1 << 9;
+
+En otra terminal pero en el mismo directorio /tmp que se ha ejecutado openocd:
+``` console
+touch itm.txt & itmdump -F -f itm.txt
+```
+```
+(gdb) next              *(GPIOE_BSRR as *mut u32) = 1 << 9;
 
 (gdb) x 0x48001018
 0x48001018:     0x00000000
@@ -56,8 +66,7 @@ Si no ha compilado y ejecutado el programa todavía, es hora de hacerlo. Recuerd
 (gdb) x 0x48001018
 0x48001018:     0x00000000
 ```
-
-Como dice el manual, si intentamos leer este registro, siempre devuelve `0`.
+mo dice el manual, si intentamos leer este registro, siempre devuelve `0`.
 
 Como dice el manual, los bits que van del 0 al 15 se utilizan para poner a 1 la salida, mientras que los que van del 16 al 31 se utilizan para poner a 0 la salida. Se corresponde el bit con el pin de salida (bit 0 , pin de salida 0).
 
