@@ -59,20 +59,25 @@ Si no ha compilado y ejecutado el programa todavía, es hora de hacerlo. Recuerd
 
 Como dice el manual, si intentamos leer este registro, siempre devuelve `0`.
 
-The other thing that the documentation says is that the bits 0 to 15 can be used to *set* the
-corresponding pin. That is bit 0 sets the pin 0. Here, *set* means outputting a *high* value on
-the pin.
+Como dice el manual, los bits que van del 0 al 15 se utilizan para poner a 1 la salida, mientras que los que van del 16 al 31 se utilizan para poner a 0 la salida. Se corresponde el bit con el pin de salida (bit 0 , pin de salida 0).
 
-The documentation also says that bits 16 to 31 can be used to *reset* the corresponding pin. In this
-case, the bit 16 resets the pin number 0. As you may guess, *reset* means outputting a *low* value
-on the pin.
 
-Correlating that information with our program, all seems to be in agreement:
+- Escribiendo `1 << 9` (`BS9 = 1`)  al `BSRR`  pone a nivel alto `PE9`. Esto enciende el LED Norte.
 
-- Writing `1 << 9` (`BS9 = 1`)  to `BSRR`  sets `PE9` *high*. That turns the North LED *on*.
+- Escribiendo `1 << 11` (`BS11 = 1`) al `BSRR` pone a nivel alto `PE11`. Esto enciende el LED Este.
 
-- Writing `1 << 11` (`BS11 = 1`) to `BSRR` sets `PE11` *high*. That turns the East LED *on*.
+- Escribiendo `1 << 25` (`BR9 = 1`) al `BSRR` pone a cero `PE9`. Esto apaga el LED Norte.
 
-- Writing `1 << 25` (`BR9 = 1`) to `BSRR` sets `PE9` *low*. That turns the North LED *off*.
+- Escribiendo `1 << 27` (`BR11 = 1`) al `BSRR` pone a cero `PE11`. That turns the East LED *off*.
 
-- Finally, writing `1 << 27` (`BR11 = 1`) to `BSRR` sets `PE11` *low*. That turns the East LED *off*.
+Para que tengamos una referencia gŕafica de lo arriba expuesto, pongo una babla del estado de los bits de este registro. Podrás observar que están alineados los pines 9 y 25 (para set y reset respectivamente), al igual que el resto. Por esta razón, en nuestro programa sumamos 16 al valor del bit inferior para referirnos a su homólogo en el bit superior. Es decir, si pongo a 1 la salida 9, utilizo el bit BS9 colocándolo a 1, pero si acto seguido quiero ponerlo a cero, tengo que usar su homologo, que está 16 bits más arriba, osea el BR25 y poner este bit ( BR25)  a 1:
+
+```
+T -> 31   30   29   28   27   26  25  24  23  22   21  20  19  18  17  16
+W/R    w    w    w    w    w     w   w   w   w   w   w   w   w   w   w   w
+      BR15 BR14 BR13 BR12 BR11 BR10 BR9 BR8 BR7 BR6 BR5 BR4 BR3 BR2 BR1 BR0
+
+BIT -> 15   14   13   12   11   10   9   8   7   6   5   4   3   2   1   0
+W/R    w    w    w    w    w     w   w   w   w   w   w   w   w   w   w   w
+         BS15 BS14 BS13 BS12 BS11 BS10 BS9 BS8 BS7 BS6 BS5 BS4 BS3 BS2 BS1 BS0
+```
