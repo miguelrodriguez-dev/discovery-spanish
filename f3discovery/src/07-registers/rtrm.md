@@ -64,7 +64,7 @@ touch itm.txt & itmdump -F -f itm.txt
 (gdb) x 0x48001018
 0x48001018:     0x00000000
 ```
-mo dice el manual, si intentamos leer este registro, siempre devuelve `0`.
+Como dice el manual, si intentamos leer este registro, siempre devuelve `0`.
 
 Como dice el manual, los bits que van del 0 al 15 se utilizan para poner a 1 la salida, mientras que los que van del 16 al 31 se utilizan para poner a 0 la salida. Se corresponde el bit con el pin de salida (bit 0 , pin de salida 0).
 
