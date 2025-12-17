@@ -79,5 +79,5 @@ W/R    w    w    w    w    w     w   w   w   w   w   w   w   w   w   w   w
 
 BIT -> 15   14   13   12   11   10   9   8   7   6   5   4   3   2   1   0
 W/R    w    w    w    w    w     w   w   w   w   w   w   w   w   w   w   w
-         BS15 BS14 BS13 BS12 BS11 BS10 BS9 BS8 BS7 BS6 BS5 BS4 BS3 BS2 BS1 BS0
+      BS15 BS14 BS13 BS12 BS11 BS10 BS9 BS8 BS7 BS6 BS5 BS4 BS3 BS2 BS1 BS0
 ```
