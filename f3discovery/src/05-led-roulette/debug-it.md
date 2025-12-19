@@ -4,6 +4,24 @@ Partimos del supuesto que uste no tiene ejecutando una terminal con `openocd` ni
 cierre todoas las sesiones ya que voy a explicar mediante dos métodos, cómo hacer una depuración mediante `cargo build` y otra mediante `cargo run` (con el runner activado).
 
 # Depurando sin usar "runner"
+Tenemos que tener compilado nuestro proyecto y si noo es así, nos situamos en la raíz de nuestro proyecto (05-led-roulette) y ejecutar el siguiente comando:
+
+``` console
+cargo build --target thumbv7em-none-eabihf
+```
+Comprobamos que se ha compilado para la arquitectura ARM:
+
+``` console
+cargo readobj --target thumbv7em-none-eabihf --bin led-roulette -- --file-header
+```
+El punto más importante de esta comprobación es la dirección de inicio del programa. Como sabe, nuestro microcontrolador se inicia en la dirección 0x08xx xxxx, por lo que debe aparecer:
+
+``` text
+Entry point address:               0x8000195
+```
+El primer "0" no se muestra, pero si coincide con el inicio de la dirección de programación. En caso de que no coicida y empiece por 0x0000 xxxx o algo similar, es debido a que su proyecto nos está
+configurado correctamente para el microcontrolador actual.
+
 Lo primero que debemos hacer es lanzar una sesión de openocd en una terminal, desde el directorio temporal como hemos hecho hasta ahora. Le pongo de nuevo el comando para 
 abrir una sesión de openocd:
 ``` console
