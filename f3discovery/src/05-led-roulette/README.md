@@ -15,6 +15,49 @@ Descargue en su PC este repositorio para mayor comodidad. Para ello, en la image
 
 [discovery]: https://github.com/rust-embedded/discovery
 
+Vamos a crear un directorio nuevo en su /home denominado 05-led-roulette. Desde el directorio “f3discovery/src” copiamos :
+    • f3discovery/src/.cargo → MiProyecto/05-led-roulette/
+    • f3discovery/src/openocd.gdb → MiProyecto/05-led-roulette/
+    • f3discovery/src/05-led-roulette/Cargo.toml → MiProyecto/05-led-roulette/
+    • f3discovery/src/05-led-roulette/auxiliary → MiProyecto/05-led-roulette/
+    • f3discovery/src/05-led-roulette/src → MiProyecto/05-led-roulette/
+No se preocupe por todo esto, simplemente crear la estructura siguiente con los archivos siguientes cuyos contenidos se detalla a continuación :
+
+``` text
+05-led-roulette/
+├── auxiliary
+│   ├── Cargo.toml
+│   └── src
+│       └── lib.rs
+├── Cargo.toml
+├── .cargo
+│    └── config.toml
+├── openocd.gdb
+└── src
+    └── main.rs
+```
+
+El archivo `Cargo.toml` que cuelga del principal (05-led-roulette) debe tener el siguiente contenido:
+
+``` text
+[package]
+authors = [
+    "Jorge Aparicio <jorge@japaric.io>",
+    "Christopher J. McClellan <chris.mcclellan203@gmail.com>",
+    "Wink Saville <wink@saville.com",
+]
+edition = "2018"
+name = "led-roulette"
+version = "0.2.0"
+
+[dependencies]
+aux5 = { path = "auxiliary" }
+
+[profile.release]
+codegen-units = 1
+debug = true
+lto = true
+```
 Vaya entonces al directorio `src/05-led-roulette` . Compruebe el archivo `src/main.rs`:
 
 ``` rust
