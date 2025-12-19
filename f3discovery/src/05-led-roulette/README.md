@@ -58,6 +58,79 @@ codegen-units = 1
 debug = true
 lto = true
 ```
+El archivo `openocd.gdb` contiene:
+``` text
+# Connect to gdb remote server
+target remote :3333
+
+# Load will flash the code
+load
+
+# Enable demangling asm names on disassembly
+set print asm-demangle on
+
+# Enable pretty printing
+set print pretty on
+
+# Disable style sources as the default colors can be hard to read
+set style sources off
+
+# Initialize monitoring so iprintln! macro output
+# is sent from the itm port to itm.txt
+monitor tpiu config internal itm.txt uart off 8000000
+
+# Turn on the itm port
+monitor itm port 0 on
+
+# Set a breakpoint at main, aka entry
+break main
+
+# Set a breakpoint at DefaultHandler
+break DefaultHandler
+
+# Set a breakpoint at HardFault
+break HardFault
+
+# Continue running until we hit the main breakpoint
+continue
+
+# Step from the trampoline code in entry into main
+step
+```
+
+Este archivo contiene todos los pasos necesarios para abrir una sesión de GDB, programar el chip, establecer unos parámetros de visualización de GDB así como los pasos necesarios para hacer un debug a nuestra placa. Se explicará mas detalladamente, no se preocupe.
+El directorio oculto `.cargo` contiene en su interior un archivo de configuración denominado `config.toml` y su contenido es:
+
+``` text
+# default runner starts a GDB sesssion, which requires OpenOCD to be
+# running, e.g.,
+## openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
+# depending on your local GDB, pick one of the following
+[target.thumbv7em-none-eabihf]
+#runner = "arm-none-eabi-gdb -q -x ../openocd.gdb"
+# runner = "gdb-multiarch -q -x ../openocd.gdb"
+# runner = "gdb -q -x ../openocd.gdb"
+rustflags = [
+  "-C", "link-arg=-Tlink.x",
+]
+
+[build]
+target = "thumbv7em-none-eabihf"
+```
+
+Básicamente, este archivo configura cómo se comportará cargo cuando ejecutemos `cargo run` en nuestro proyecto a través de lo que denominamos `runner`. Estos no son más que unos comandos que se añaden como parámetro a “cargo run” para automatizar tanto el flasheo del microcontrolador entre otras cosas que veremos con más detalles. No usaremos este archivo hasta que veamos unas cositas más adelante. 
+
+El directorio `auxiliary` contiene la librería que necesitaremos entre otras cosas para inicializar nuestra placa de desarrollo así como todo lo que necesitemos sobre métodos y clases para activar nuestros leds de este proyecto. En este directorio, contiene un directorio `src` con la librería `lib.rs` y otro archivo `Cargo.toml` para las dependencias de dicha librería.
+
+El directorio `examples` contiene un par de ejemplos de unas propuestas de programación que luego te pondré como ejercicio :). Por supuesto, no es necesario este directorio, pero tenerlo tampoco te afecta a la hora de compilar ni nada por el estilo. Puedes eliminarlo tranquilamente, ya que su código de dichos ejemplos, te los muestro en este libro.
+
+El directorio `src` contiene por tanto el programa de nuestro proyecto.
+
+Y el archivo `Cargo.toml` que relaciona nuestro binario con la librería `auxiliary` como dependencias:
+
+
+
+
 Vaya entonces al directorio `src/05-led-roulette` . Compruebe el archivo `src/main.rs`:
 
 ``` rust
