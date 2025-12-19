@@ -128,8 +128,23 @@ El directorio `src` contiene por tanto el programa de nuestro proyecto.
 
 Y el archivo `Cargo.toml` que relaciona nuestro binario con la librería `auxiliary` como dependencias:
 
+``` text
+[package]
+authors = [
+    "Jorge Aparicio <jorge@japaric.io>",
+    "Christopher J. McClellan <chris.mcclellan203@gmail.com>",
+    "Wink Saville <wink@saville.com",
+]
+edition = "2018"
+name = "led-roulette"
+version = "0.2.0"
 
+[dependencies]
+aux5 = { path = "auxiliary" }
+```
 
+En éste libro seguiremos la estructura ya montada del directorio f3discovery original para su facilidad de comprensión. Sepa que mi objetivo es que aprendas a diferenciar entre hacer tu propio proyecto, y uno ya construido con todos sus archivos de compilación y configuración de herramientas.
+Sigamos con nuestro miniproyecto.
 
 Vaya entonces al directorio `src/05-led-roulette` . Compruebe el archivo `src/main.rs`:
 
@@ -152,9 +167,4 @@ no devuelve nada, osea, que el programa nunca termina.
 
 [`cortex-m-rt`]: https://crates.io/crates/cortex-m-rt
 
-En el proyecto nuevo, habrá observado (si tiene habilitado “ver archivos ocultos”) que hay un directorio oculto 
-denominado `.cargo`. Este directorio contiene la configuración de Cargo solo para este proyecto (`.cargo/config`) 
-esto modifica el proceso de linking para adaptar la distribución de memoria del programa a los requisitos del 
-dispositivo de destino. Este proceso de linking modificado es un requisito del paquete `cortex-m-rt`. En secciones 
-posteriores, también realizarás ajustes adicionales en `.cargo/config` para facilitar la compilación y la depuración. 
-Vamos a construir (compilar) nuestro programa. 
+El siguiente paso es compilar nuestro programa.
