@@ -31,12 +31,10 @@ En segundo lugar, nos situamos dentro del direcotrio raíz de nuestro proyecto 0
 ``` console
 gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
 ```
-
-
-Nuestro programa está detenido en su punto de entrada "entry point". Esto está referenciado como la dirección de inicio 0x8000XXX en la terminal 
-donde se está ejecutando GDB. En mi caso, la dirección de inicio es “Start address 0x08000194”. Este punto de entrada, es lo primero que ejecuta 
-el procesador.
-
+Lo siguiente es grabar el programa al microcontrolador con "load":
+``` text
+(gdb) load
+```
 El proyecto inicial tiene código adicional que se ejecuta antes de la función principal. En este momento, no nos interesa esa parte que viene antes de `main`,
 así que pasemos directamente al inicio de la función principal. Lo haremos usando un punto de interrupción. Ejecuta `break main` en la línea de comandos (de gdb):
 
@@ -62,11 +60,9 @@ Ejecutamos el `break main`:
 Breakpoint 1 at 0x80001f0: file src/05-led-roulette/src/main.rs, line 7.
 Note: automatically using hardware breakpoints for read-only addresses.
 ```
-> **Nota** Si ejecutó `cargo run` con el `runner` activado adecuadamente, ya se habrá creado un breakpoint 
-> a `main`, justo en la línea 7 y con el número de break a 1. Pero es posible que la posición 
-> del puntero, no quede en el punto que deseamos, por lo que tendremos que ejecutar un `reset`
-> para situar al microcontrolador en la posición de inicio con el comando `monitor reset halt` 
-> y el siguiente comando será `continue`  que se supone que saltará hasta el punto de entrada:
+Nuestro programa está detenido en su punto de entrada "entry point". Esto está referenciado como la dirección de inicio 0x8000XXX en la terminal 
+donde se está ejecutando GDB. En mi caso, la dirección de inicio es “Start address 0x08000194”. Este punto de entrada, es lo primero que ejecuta 
+el procesador.
 
 A continuación introduciremos el coamndo `continue`:
 
@@ -194,8 +190,6 @@ Como se mencionó anteriormente, el comando `disassemble /m` permite desensambla
 También puede activar `print asm-demangle on` para que los nombres se muestren sin codificar; esto solo es necesario hacerlo
 una vez por sesión de depuración. Más adelante, este y otros comandos se incluirán en un archivo de inicialización, lo que 
 simplificará el inicio de una sesión de depuración.
-
-> **Nota**: Si ejecutó `cargo run` para este ejercicio, sepa que no es necesario activar `asm-demangle` ya que está activado desde el archivo `openocd.gdb`.
 
 ```
 (gdb) set print asm-demangle on
