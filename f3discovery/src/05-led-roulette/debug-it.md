@@ -1,7 +1,20 @@
 # Depurando
 
-Todavía estamos en la sesión después de hacer un `load` o bien de ejeuctar `cargo run` (mediante la activación del `runner previamente`), 
-por lo que vamos a hacer una depuración.
+Partimos del supuesto que uste no tiene ejecutando una terminal con `openocd` ni tampoco tiene abierta una sesión de GDB en otra terminal. En caso de que no sea así,
+cierre todoas las sesiones ya que voy a explicar mediante dos métodos, cómo hacer una depuración mediante `cargo build` y otra mediante `cargo run` (con el runner activado).
+
+# Depurando sin usar "runner"
+Lo primero que debemos hacer es lanzar una sesión de openocd en una terminal, desde el directorio temporal como hemos hecho hasta ahora. Le pongo de nuevo el comando para 
+abrir una sesión de openocd:
+``` console
+openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
+```
+En segundo lugar, nos situamos dentro del direcotrio raíz de nuestro proyecto 05-led-roulette y lanzamos el GDB correspondiente a su distribución Linux. En mi caso, uso Fedora por lo que uso `gdb`, si usas Debian/Ubuntu usaras `gdb-multiarch ...` o para Arch Linux `arm-none-eabi-gdb` :
+
+``` console
+gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
+```
+
 
 Nuestro programa está detenido en su punto de entrada "entry point". Esto está referenciado como la dirección de inicio 0x8000XXX en la terminal 
 donde se está ejecutando GDB. En mi caso, la dirección de inicio es “Start address 0x08000194”. Este punto de entrada, es lo primero que ejecuta 
