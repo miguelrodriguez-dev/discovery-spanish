@@ -19,8 +19,7 @@ El punto más importante de esta comprobación es la dirección de inicio del pr
 ``` text
 Entry point address:               0x8000195
 ```
-El primer "0" no se muestra, pero si coincide con el inicio de la dirección de programación. En caso de que no coicida y empiece por 0x0000 xxxx o algo similar, es debido a que su proyecto nos está
-configurado correctamente para el microcontrolador actual.
+El primer "0" no se muestra, pero si coincide con el inicio de la dirección de programación. En caso de que no coicida y empiece por 0x0000 xxxx o algo similar, es debido a que su proyecto no se ha compilado con los parámetros correctos de cargo build ( es muy normal olvidar incluir --target ....).
 
 Lo primero que debemos hacer es lanzar una sesión de openocd en una terminal, desde el directorio temporal como hemos hecho hasta ahora. Le pongo de nuevo el comando para 
 abrir una sesión de openocd:
@@ -79,6 +78,23 @@ Breakpoint 1, led_roulette::__cortex_m_rt_main_trampoline () at src/05-led-roule
 7       #[entry]
 ```
 
+Puede ser que su placa, despueés de añadir el break point y de poner "continue", no se vaya a la línea 7.
+Para resolverlo, reseteamos el microcontrolador mediante el comando "monitor" y de nuevo "continue":
+
+``` text
+(gdb) monitor reset halt
+Unable to match requested speed 1000 kHz, using 950 kHz
+Unable to match requested speed 1000 kHz, using 950 kHz
+[stm32f3x.cpu] halted due to debug-request, current mode: Thread 
+xPSR: 0x01000000 pc: 0x08000194 msp: 0x2000a000
+(gdb) continue
+Continuing.
+
+Breakpoint 1, led_roulette::__cortex_m_rt_main_trampoline () at src/main.rs:7
+7	#[entry]
+(gdb) 
+
+```
 Los Breakpoints se utilizan para parar el flujo normal de un programa. El comando `continue` deja al programa 
 que se ejecute libremente hasta que llegue a un punto de parada o Breakpoint. En este caso, hasta llegar a `#[entry]`
 que es un trampolin a la función `main` y donde se ha colocado el breakpoint.
