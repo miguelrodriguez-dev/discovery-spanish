@@ -40,7 +40,7 @@ a medida que llegan nuevos datos.
 
 Yá debería tener instalado el programa `itmdump` si realizó los ejercicios anteriores y se ha explicado en el capítulo de instalación [installation chapter].
 
-[installation chapter]: ../03-setup/index.html#itmdump
+[installation chapter]: ../03-setup/itmdump
 
 En una nueva terminal, ejecute este comando dentro del directorio `/tmp`, si estás usando un sistema basado en *nix OS, o desde el directorio 
 `%TEMP%` si lo hace desde Windows.
