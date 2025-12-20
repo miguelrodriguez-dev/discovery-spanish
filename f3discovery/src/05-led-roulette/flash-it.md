@@ -267,13 +267,13 @@ halted: PC: 0x080001ee
 led_roulette::__cortex_m_rt_main () at src/05-led-roulette/src/main.rs:10
 10	    let x = 42;
 ```
-> **NOTA** Los argumentos `-x ../openocd.gdb` para `gdb` permiten programar el chip
+> **NOTA** Los argumentos `-x ./openocd.gdb` para `gdb` permiten programar el chip
 > por lo que con un simple `cargo run` se queda programado. Se hablará con más detalles
 > sobre la configuración del script para openocd en la siguiente sección.
 
 Fíjese que el `runner` ha ejecutado la conexión TCP con openocd, también ha programado el chip, y además ha creado varios breakpoints.
 
-Modificaremos `../.cargo/config.toml` en el futuro. Sin embargo, dado que este archivo se comparte 
+Modificaremos `./.cargo/config.toml` en el futuro. Sin embargo, dado que este archivo se comparte 
 entre todos los capítulos, dichos cambios deben realizarse teniendo esto en cuenta. Si desea o necesitamos 
 realizar cambios que solo afecten a un capítulo en particular, cree un archivo `.cargo/config.toml` local en 
 el directorio de ese capítulo.
@@ -287,4 +287,4 @@ se introduce el comando `load` para proceder a la grabación del programa en el 
 Para facilitarnos la vida, y no tener que poner comandos tan largos, se crea un archivo llamado **.cargo/config.toml** para modificarlo y 
 ajustarlo para nuestro proyecto y poder ejecutar la sesión GDB y programar nuestro chip tan solo con `cargo run`.
 
-Yá tenemos programado el chip, por lo que procederemos a la depuración.
+Yá tenemos programado el chip, por lo que procederemos a la [depuración](debug-it.md).
