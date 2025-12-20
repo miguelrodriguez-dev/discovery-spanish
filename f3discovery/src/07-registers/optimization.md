@@ -1,16 +1,21 @@
 # (mis)Optimization
 
-Reads/writes to registers are quite special. I may even dare to say that they are embodiment of side
-effects. In the previous example we wrote four different values to the same register. If you didn't
-know that address was a register, you may have simplified the logic to just write the final value `1
-<< (11 + 16)` into the register.
+Las lecturas y escrituras en registros son un poco especiales. En el ejemplo anterior, escribimos cuatro valores diferentes en el mismo registro. 
+Si no sabías que la dirección era un registro, podrías haber simplificado la lógica simplemente escribiendo el valor final `1 << (11 + 16)` en el registro.
 
-Actually, LLVM, the compiler's backend / optimizer, does not know we are dealing with a register and
-will merge the writes thus changing the behavior of our program. Let's check that really quick.
+Actualmente, LLVM, el backend/optimizador del compilador no sabe que estamos tratando con un registro y fusionará las escrituras, modificando así el comportamiento de nuestro programa. Veamos esto rápidamente.
+Recuerde tener iniciada la sesión de openocd y itm en el mísmo directorio (en este caso /tmp) y cada una en una terminal:
 
 ``` console
+touch itm.txt && itmdump -F -f itm.txt
+```
+``` console
+interface/stlink.cfg -f target/stm32f3x.cfg
+```
+Nos situamos en el directorio raíz del proyecto "07-registers" ycera terminal, nos situamos dentro del directorio raíz y ejecutamos:
+``` console
 $ cargo run --release
-(..)
+(...)
 Breakpoint 1, registers::__cortex_m_rt_main_trampoline () at src/07-registers/src/main.rs:7
 7       #[entry]
 
