@@ -531,4 +531,4 @@ Ending remote debugging.
 
 Bien, y ¿Qué ocurriría si pongo un valor de retardo muy bajo en `half_period`? ¿Cuál es el valor más bajo al que deja de parpadear?
 
-En la siguiente sección, es tu turno para escribir un programa.
+En la [siguiente sección](the-challenge.md), es tu turno para escribir un programa.
