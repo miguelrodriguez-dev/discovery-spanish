@@ -1,39 +1,47 @@
 # Depurando
 
-Partimos del supuesto que no tiene ejecutando una terminal con `openocd` ni tampoco tiene abierta una sesión de GDB en otra terminal y que el microcontrolador tiene otro programa cargado o bien no tiene ninguno. En caso de que no sea así, cierre todoas las sesiones ya que voy a explicar mediante dos métodos, cómo hacer una depuración cuando el binario ha sido compilado con `cargo build` y otra cuando ha sido compilado con `cargo run` (con el runner activado). Esto se debe principalmente a que cuando se compila con "cargo run" (si se ha configurado bien su ruunner en .cargo/comfig.toml) se crean una serie de pasos dictados por el archivo "openocd.gdb como establecer la conexión GDB con openocd, escribir en el chip, crear break points y saltar hasta el punto de entrada y esto puede provocarno mucha confusión y que las pautas a seguir, no van a coincidir.
+Partimos del supuesto que ha seguido el manual hasta aquí y tiene ejecutando una terminal con `openocd` y tiene abierta una sesión de GDB en otra terminal y que el microcontrolador tiene el programa cargado. En caso de que no sea así, cierre todoas las sesiones que tenga abierta y compile correctamente el programa y escriba en el chip.
+Bien, pues en la termial de "openocd" debe ver:
+``` text
+xPSR: 0x21000000 pc: 0x080001f2 msp: 0x20009fd8
+Info : accepting 'gdb' connection on tcp/3333
+Info : device id = 0x10036422
+Info : flash size = 256 KiB
+Warn : Prefer GDB command "target extended-remote :3333" instead of "target remote :3333"
+Info : Unable to match requested speed 1000 kHz, using 950 kHz
+Info : Unable to match requested speed 1000 kHz, using 950 kHz
+[stm32f3x.cpu] halted due to debug-request, current mode: Thread 
+xPSR: 0x01000000 pc: 0x08000194 msp: 0x2000a000
+Info : Unable to match requested speed 8000 kHz, using 4000 kHz
+Info : Unable to match requested speed 8000 kHz, using 4000 kHz
+Info : Unable to match requested speed 1000 kHz, using 950 kHz
+Info : Unable to match requested speed 1000 kHz, using 950 kHz
+[stm32f3x.cpu] halted due to debug-request, current mode: Thread 
+xPSR: 0x01000000 pc: 0x08000194 msp: 0x2000a000
+
+```
+Esto significa que tiene a openocd conectado a GDB y que el contador de programa (pc) apunta a la dirección de inicio. Ahora debe ver en la terminal de GDB:
+``` text
+[tunero@chuliPC 05-led-roulette] $ arm-none-eabi-gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
+Reading symbols from target/thumbv7em-none-eabihf/debug/led-roulette...
+Remote debugging using :3333
+0x080001f2 in stm32f3xx_hal::gpio::{impl#41}::set_high::{closure#0} (
+    w=0x8000203 <stm32f3xx_hal::gpio::{impl#41}::set_high::{closure#0}+24>)
+    at /home/miguel/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stm32f3xx-hal-0.7.0/src/gpio.rs:702
+warning: 702	/home/miguel/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stm32f3xx-hal-0.7.0/src/gpio.rs: No existe el fichero o el directorio
+(gdb) load
+Loading section .vector_table, size 0x194 lma 0x8000000
+Loading section .text, size 0x496c lma 0x8000194
+Loading section .rodata, size 0x1c04 lma 0x8004b00
+Start address 0x08000194, load size 26372
+Transfer rate: 18 KB/sec, 6593 bytes/write.
+(gdb) 
+
+```
+En este punto, acabamos de programar el chip y por tanto está a la espera de nuevos comandos.
 
 # Depurando sin usar "runner"
-Tenemos que tener compilado nuestro proyecto y si noo es así, nos situamos en la raíz de nuestro proyecto (05-led-roulette) y ejecutar el siguiente comando:
 
-``` console
-cargo build --target thumbv7em-none-eabihf
-```
-Comprobamos que se ha compilado para la arquitectura ARM:
-
-``` console
-cargo readobj --target thumbv7em-none-eabihf --bin led-roulette -- --file-header
-```
-El punto más importante de esta comprobación es la dirección de inicio del programa. Como sabe, nuestro microcontrolador se inicia en la dirección 0x08xx xxxx, por lo que debe aparecer:
-
-``` text
-Entry point address:               0x8000195
-```
-El primer "0" no se muestra, pero si coincide con el inicio de la dirección de programación. En caso de que no coicida y empiece por 0x0000 xxxx o algo similar, es debido a que su proyecto no se ha compilado con los parámetros correctos de cargo build ( es muy normal olvidar incluir --target ....).
-
-Lo primero que debemos hacer es lanzar una sesión de openocd en una terminal, desde el directorio temporal como hemos hecho hasta ahora. Le pongo de nuevo el comando para 
-abrir una sesión de openocd:
-``` console
-openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
-```
-En segundo lugar, nos situamos dentro del direcotrio raíz de nuestro proyecto 05-led-roulette y lanzamos el GDB correspondiente a su distribución Linux. En mi caso, uso Fedora por lo que uso `gdb`, si usas Debian/Ubuntu usaras `gdb-multiarch ...` o para Arch Linux `arm-none-eabi-gdb` :
-
-``` console
-gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
-```
-Lo siguiente es grabar el programa al microcontrolador con "load":
-``` text
-(gdb) load
-```
 El proyecto inicial tiene código adicional que se ejecuta antes de la función principal. En este momento, no nos interesa esa parte que viene antes de `main`,
 así que pasemos directamente al inicio de la función principal. Lo haremos usando un punto de interrupción. Ejecuta `break main` en la línea de comandos (de gdb):
 
