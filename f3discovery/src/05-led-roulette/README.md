@@ -169,4 +169,4 @@ no devuelve nada, osea, que el programa nunca termina.
 
 [`cortex-m-rt`]: https://crates.io/crates/cortex-m-rt
 
-El siguiente paso es compilar nuestro programa.
+El siguiente paso es [compilar](build-it.md) nuestro programa.
