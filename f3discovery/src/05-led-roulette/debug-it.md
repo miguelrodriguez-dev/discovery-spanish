@@ -362,7 +362,7 @@ Para abandonar el modo TUI :
 [gdb-dashboard]: https://github.com/cyrus-and/gdb-dashboard#gdb-dashboard
 
 
-# Compilando con "cargo run"
+# Depurando con "runner". Compilando con "cargo run"
 
 Introducir el parámetro tan extenso y complejo, provoca errores, es tedioso y dificil de memorizar. Se puede automatizar mediante un 
 archivo de configuración de "cargo".
