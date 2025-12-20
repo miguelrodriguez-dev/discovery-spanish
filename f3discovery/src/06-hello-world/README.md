@@ -38,9 +38,7 @@ envía la cadena "¡Hola, mundo!" mediante la macro `iprintln`, el archivo de sa
 Para recuperar la cadena original, será necesario analizar el archivo de salida de OpenOCD. Usaremos el programa `itmdump` para realizar el análisis 
 a medida que llegan nuevos datos.
 
-Yá debería tener instalado el programa `itmdump` si realizó los ejercicios anteriores y se ha explicado en el capítulo de instalación [installation chapter].
-
-[installation chapter]: ../03-setup/itmdump
+Yá debería tener instalado el programa `itmdump` si realizó los ejercicios anteriores y se ha explicado en el capítulo de instalación.
 
 En una nueva terminal, ejecute este comando dentro del directorio `/tmp`, si estás usando un sistema basado en *nix OS, o desde el directorio 
 `%TEMP%` si lo hace desde Windows.
