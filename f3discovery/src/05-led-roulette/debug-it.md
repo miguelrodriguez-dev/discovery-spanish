@@ -456,4 +456,4 @@ el directorio de ese capítulo.
 Si quiere consultar más sobre [Cómo usar GDB](../appendix/2-how-to-use-gdb/).
 
 
-Y ahora... La [API](the-led-and-delay-abstraction.md) prometida.
+Y ahora... La [API](the-led-and-delay-abstractions.md) prometida.
