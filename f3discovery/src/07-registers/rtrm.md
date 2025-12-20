@@ -90,3 +90,5 @@ W/R    w    w    w    w    w     w   w   w   w   w   w   w   w   w   w   w
 ```
 
 > **Nota** Si BSx y BRx se ponen a uno, tiene preferencia BSx, siendo x el bit a configurar [del 0 al 15]
+
+Pasamos ahora a la sección de [optimización](optimization.md).
