@@ -32,4 +32,4 @@ Ese estado "low" es 0 o `false` y "high" es 1 o `true`. Por esta razón , a esta
 
 ---
 
-Para saber más sobre estas características, refiérase al RTRM (Read the Reference Manual)!
+Para saber más sobre estas características, refiérase al RTRM (Read the Reference Manual)! Ahora vamos a la siguiente sección [RTRM](rtrm.md).
