@@ -12,7 +12,7 @@ touch itm.txt && itmdump -F -f itm.txt
 ``` console
 openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
 ```
-Nos situamos en el directorio raíz del proyecto "07-registers" ycera terminal, nos situamos dentro del directorio raíz y ejecutamos:
+Nos situamos en el directorio raíz del proyecto "07-registers" y en la tercera terminal, nos situamos dentro del directorio raíz y ejecutamos:
 ``` console
 $ cargo run --release
 (...)
@@ -60,18 +60,16 @@ Dump of assembler code for function _ZN9registers18__cortex_m_rt_main17h45b1ef53
 End of assembler dump.
 ```
 
-The state of the LEDs didn't change this time! The `str` instruction is the one that writes a value
-to the register. Our *debug* (unoptimized) program had four of them, one for each write to the
-register, but the *release* (optimized) program only has one.
+El estado de los LEDs no cambió en este tiempo. La instrucción str es la única que escribe un valor en el registro. En nuestro programa, cuando ejecutamos el debug en modo “dev”, tenía cuatro instrucciones str para escribir en el registro, sin embargo, en modo “release” solo tenía una.
 
-We can check that using `objdump` and capture the output to `out.asm`:
+Podemos comprobar esta situación usando `objdump` y capturando la salida hacia `out.asm`:
 
 ``` console
 # same as cargo objdump -- -d --no-show-raw-insn --print-imm-hex --source target/thumbv7em-none-eabihf/debug/registers
 cargo objdump --bin registers -- -d --no-show-raw-insn --print-imm-hex --source > debug.txt
 ```
 
-Then examine `debug.txt` looking for `main` and we see the 4 `str` instructions:
+Examinamos `debug.txt` en busca de `main` y vemos cuatro instrucciones `str` :
 ```
 080001ec <main>:
 ; #[entry]
@@ -115,8 +113,7 @@ Then examine `debug.txt` looking for `main` and we see the 4 `str` instructions:
  (..)
 ```
 
-How do we prevent LLVM from misoptimizing our program? We use *volatile* operations instead of plain
-reads/writes:
+¿Cómo evitamos que LLVM optimice incorrectamente nuestro programa? Usamos operaciones volátiles en lugar de lecturas/escrituras simples:
 
 ``` rust
 #![no_main]
@@ -153,13 +150,13 @@ fn main() -> ! {
 
 ```
 
-Generate `release.txt` using with `--release` mode.
+Genere un nuevo archivo llamado `release.txt` usando el modo `--release`.
 
 ``` console
 cargo objdump --release --bin registers -- -d --no-show-raw-insn --print-imm-hex --source > release.txt
 ```
 
-Now find the `main` routine in `release.txt` and we see the 4 `str` instructions.
+Busquemos la rutina `main` en el archivo `release.txt` y podremos ver 4 instrucciones `str`.
 ```
 0800023e <main>:
 ; #[entry]
@@ -189,10 +186,9 @@ Now find the `main` routine in `release.txt` and we see the 4 `str` instructions
  (..)
  ```
 
-We see that the four writes (`str` instructions) are preserved. If you run it using
-`gdb` you'll also see that we get the expected behavior.
-> NB: The last `next` will endlessly execute `loop {}`, use `Ctrl-c` to get
-> back to the `(gdb)` prompt.
+Vemos que las cuatro escrituras (las instrucciones str ) se mantienen. Si lo ejecuta usando gdb podrías ver lo esperado.
+
+> Nota: El último next ejecutará loop {}, pulse Ctrl-c para volver a (gdb).
 ```
 $ cargo run --release
 (..)
@@ -224,3 +220,4 @@ Program received signal SIGINT, Interrupt.
 1124            intrinsics::volatile_store(dst, src);
 (gdb) 
 ```
+Veamos qué pasa si introducimos una [dirección no válida](bad-address.md).
