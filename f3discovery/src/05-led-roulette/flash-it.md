@@ -54,10 +54,6 @@ un protocolo de depuración como SWD o JTAG.
 En cuanto al comando actual: esos archivos `.cfg` que estamos usando le indican a OpenOCD que busque un dispositivo USB ST-LINK 
 (`interface/stlink-v2-1.cfgf`) y que espere que un microcontrolador STM32F3XX (`target/stm32f3x.cfgf`) esté conectado al ST-LINK.
 
-La salida de la terminal donde se ejecuta OpenOCD:
-``` console
-openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg
-```
 Y la salida obtenida:
 ```
 Open On-Chip Debugger 0.10.0censed under GNU GPL v2
@@ -76,7 +72,7 @@ Info : using stlink api v2
 Info : Target voltage: 2.888183
 Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints
 ```
-a parte donde indica "6 breakpoints, 4 watchpoints" es sinónimo de que el procesador tiene esas características disponibles.
+Donde indica "6 breakpoints, 4 watchpoints" es sinónimo de que el procesador tiene esas características disponibles.
 
 Dejemos corriendo al proceso `openocd`, abrimos una nueva terminal **asegurándoos de estar dentro del proyecto `src/05-led-roulette/`**.
 
