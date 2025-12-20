@@ -126,4 +126,4 @@ $1 = cortex_m_rt::ExceptionFrame {
 
 `r0` contiene el valor `0x4800_1800` que es una dirección inválida que hemos llamado mediante la función `read_volatile`.
 
-Pasemos a la siguiente sección donde hablamos del registro [ODR](spooky-action-at-a-distnace.md).
+Pasemos a la siguiente sección donde hablamos del registro [ODR](spooky-action-at-a-distance.md).
