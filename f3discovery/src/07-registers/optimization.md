@@ -10,7 +10,7 @@ Recuerde tener iniciada la sesión de openocd y itm en el mísmo directorio (en 
 touch itm.txt && itmdump -F -f itm.txt
 ```
 ``` console
-interface/stlink.cfg -f target/stm32f3x.cfg
+openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
 ```
 Nos situamos en el directorio raíz del proyecto "07-registers" ycera terminal, nos situamos dentro del directorio raíz y ejecutamos:
 ``` console
