@@ -20,7 +20,7 @@ Info : Unable to match requested speed 1000 kHz, using 950 kHz
 xPSR: 0x01000000 pc: 0x08000194 msp: 0x2000a000
 
 ```
-Esto significa que tiene a openocd conectado a GDB y que el contador de programa (pc) apunta a la dirección de inicio. Ahora debe ver en la terminal de GDB:
+Esto significa que tiene a `openocd` conectado a `GDB` y que el contador de programa (pc) apunta a la dirección de inicio. Ahora debe ver en la terminal de GDB:
 ``` text
 [tunero@chuliPC 05-led-roulette] $ arm-none-eabi-gdb -q -ex "target remote :3333" target/thumbv7em-none-eabihf/debug/led-roulette
 Reading symbols from target/thumbv7em-none-eabihf/debug/led-roulette...
@@ -286,6 +286,7 @@ Quit anyway? (y or n) y
 Detaching from program: $PWD/target/thumbv7em-none-eabihf/debug/led-roulette, Remote target
 Ending remote debugging.
 ```
+# **Modo TUI** (solo para sistemas *nix) 
 
 Si quiere tener una experiencia más agradable, puede usar Text User Interface (TUI). Para entrar en este modo de visualización,
 introduzca uno de los siguiente comandos (solo uno ) en la terminal de GDB. 
@@ -360,7 +361,99 @@ Para abandonar el modo TUI :
 
 [gdb-dashboard]: https://github.com/cyrus-and/gdb-dashboard#gdb-dashboard
 
+
+# Compilando con "cargo run"
+
+Introducir el parámetro tan extenso y complejo, provoca errores, es tedioso y dificil de memorizar. Se puede automatizar mediante un 
+archivo de configuración de "cargo".
+
+## Configurar ../.cargo/config.toml
+
+Ahora que sabe qué debugger va a utilizar, necesitaremos cambiar el archivo `../.cargo/config.toml` para que el comando `cargo run` se
+ejecute correctamente.
+
+> **NOTA** `cargo` es el gestor de paquete de Rust y puedes leer algo sobre él [aquí](https://doc.rust-lang.org/cargo/).
+
+Abramos una terminal y modifiquemos el archivo `../.cargo/config.toml`. Aquí tenemos `arm-none-eabi-gdb` activado para usar (está descomentado). Lo primero,
+situarnos en el directorio de nuestro proyecto:
+
+``` console
+cd ~/embedded-discovery/src/05-led-roulette
+```
+Luego editamos con `nano` el archivo `../.cargo/config.toml`:
+
+``` console
+nano ../.cargo/config.toml
+```
+El archivo debe tener algo parecido a esto:
+```
+# default runner starts a GDB sesssion, which requires OpenOCD to be
+# running, e.g.,
+## openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
+# depending on your local GDB, pick one of the following
+[target.thumbv7em-none-eabihf]
+#runner = "arm-none-eabi-gdb -q -x ../openocd.gdb"
+# runner = "gdb-multiarch -q -x ../openocd.gdb"
+runner = "gdb -q -x ../openocd.gdb"
+rustflags = [
+  "-C", "link-arg=-Tlink.x",
+]
+
+[build]
+target = "thumbv7em-none-eabihf"
+```
+Vemos que en esta ocasión, tengo activado el GDB para Fedora. Utilice un solo GDB para su distro, descomentando el necesario para su distro y comentando los que son para otras distros.
+No se permite tener dos runner activados. Yo no lo haría.
+
+Ahora podemos depurar nuestro programa usando `cargo run`. Para ello, vuelva a crear una sesión en otra terminal para openocd y en otra nueva terminal ejecutamos:
+
+```
+cargo run --target thumbv7em-none-eabihf
+```
+La salida es:
+```
+    Finished dev [unoptimized + debuginfo] target(s) in 0.14s
+     Running `gdb-multiarch -q -x ../openocd.gdb /home/adam/vc/rust-training/discovery/f3discovery/target/thumbv7em-none-eabihf/debug/led-roulette`
+Reading symbols from /home/adam/vc/rust-training/discovery/f3discovery/target/thumbv7em-none-eabihf/debug/led-roulette...
+0x08000230 in core::fmt::Arguments::new_v1 (pieces=..., args=...)
+    at /rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/core/src/fmt/mod.rs:394
+394	/rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/core/src/fmt/mod.rs: No such file or directory.
+Loading section .vector_table, size 0x194 lma 0x8000000
+Loading section .text, size 0x1ad8 lma 0x8000194
+Loading section .rodata, size 0x5a4 lma 0x8001c6c
+Start address 0x08000194, load size 8720
+Transfer rate: 12 KB/sec, 2906 bytes/write.
+Breakpoint 1 at 0x80001e8: file src/05-led-roulette/src/main.rs, line 7.
+Note: automatically using hardware breakpoints for read-only addresses.
+Breakpoint 2 at 0x800020a: file src/lib.rs, line 570.
+Breakpoint 3 at 0x8001c5a: file src/lib.rs, line 560.
+
+Breakpoint 1, led_roulette::__cortex_m_rt_main_trampoline () at src/05-led-roulette/src/main.rs:7
+7	#[entry]
+halted: PC: 0x080001ee
+led_roulette::__cortex_m_rt_main () at src/05-led-roulette/src/main.rs:10
+10	    let x = 42;
+```
+> **NOTA** El `--target thumbv7em-none-eabihf` define qué arquitectura compilar y ejecutar.
+> En nuestro `../.cargo/config.toml` tenemos `target = "thumbv7em-none-eabihf"` (al final del
+> archivo) por lo que no es necesario hacer ningún cambio en  `--target`. Lo hacemos aquí solo
+>  para que sepas que se pueden usar parámetros en la línea de comandos y que estos anulan los
+> de los archivos config.toml.
+
+> **NOTA** Los argumentos `-x ./openocd.gdb` para `gdb` permiten programar el chip
+> por lo que con un simple `cargo run` se queda programado. Se hablará con más detalles
+> sobre la configuración del script para openocd en la siguiente sección.
+
+Fíjese que el `runner` ha ejecutado la conexión TCP con openocd, también ha programado el chip, y además ha creado varios breakpoints.
+Se ha parado en la línea 10. Ahora puedes hacer/epetir todos los pasos desde este punto como se ha explicado anteriormente en la 
+depuración "sin runner". Por supuesto no necesita flashear ni tampoco hacer un "break main" ya que está hecho por el script.
+
+Modificaremos `../.cargo/config.toml` en el futuro. Sin embargo, dado que este archivo se comparte 
+entre todos los capítulos, dichos cambios deben realizarse teniendo esto en cuenta. Si desea o necesitamos 
+realizar cambios que solo afecten a un capítulo en particular, cree un archivo `.cargo/config.toml` local en 
+el directorio de ese capítulo.
+
 Si quiere consultar más sobre [Cómo usar GDB](../appendix/2-how-to-use-gdb/).
 
 
-Y ahora... La API prometida.
+Y ahora... La [API](the-led-and-delay-abstraction.md) prometida.
