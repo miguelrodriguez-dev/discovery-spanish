@@ -120,4 +120,4 @@ Hello, world!
 ```
 
 Genial, ¿verdad? Puedes usar `iprintln` como herramienta de registro en las próximas secciones.
-A continuación: Pero eso no es todo! Las macros `iprintln` No son las únicas que usan ITM. :-)
+A continuación veamos a la macro [panic](panic.md): Las macros `iprintln` No son las únicas que usan ITM. :-)
