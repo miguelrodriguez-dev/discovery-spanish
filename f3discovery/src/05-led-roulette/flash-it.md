@@ -185,7 +185,7 @@ Existe un procedimiento mediante la modificación necesaria de `.cargo/config.to
 no se ejecuta `openocd`, para que se abra una sesión de GDB y programe el chip al mismo tiempo, y esperando a nuevas órdenes en la sesión de GDB.
 
 
-##Configurar ../.cargo/config.toml
+## Configurar ../.cargo/config.toml
 
 Ahora que sabe qué debugger va a utilizar, necesitaremos cambiar el archivo `../.cargo/config.toml` para que el comando `cargo run` se
 ejecute correctamente.
