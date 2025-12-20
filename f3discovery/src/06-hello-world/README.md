@@ -65,7 +65,7 @@ Este comando bloqueará la terminal, ya que `itmdump` está monitoreando el arch
 Asegúrese de que la placa STM32F3DISCOVERY esté conectada a su ordenador. Abra otra terminal y desde el directorio `/tmp` 
 (en Windows `%TEMP%`) ejecute OpenOCD como se explicó en el [chapter 3].
 
-[chapter 3]: ../03-setup/verify.html#first-openocd-connection
+[chapter 3]: https://github.com/miguelrodriguez-dev/discovery-spanish/blob/master/f3discovery/src/03-setup/README.md#itmdump
 
 Vamos a compilar el código de inicio y grabarlo en el chip.
 
