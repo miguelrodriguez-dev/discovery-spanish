@@ -221,7 +221,7 @@ rustflags = [
 target = "thumbv7em-none-eabihf"
 ```
 > **NOTA IMPORTANTE** El archivo de configuración "config.toml" y "openocd" a
-> diferencia del proyecto original (f3discorey) están en el direcorio ráiz. Por
+> diferencia del proyecto original (f3discovery) están en el direcorio ráiz. Por
 > tanto no podemos usar "../.cargo/config.toml", en su lugar debemos de quitar
 > un nivel, osea quitar un punto (.), quedando "./cargo/config.toml" en su lugar.
 > Lo mismo sucede dentro del archivo "config.toml" ya que hacen referencia a
