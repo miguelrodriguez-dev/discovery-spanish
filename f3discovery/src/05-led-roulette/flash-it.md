@@ -187,21 +187,21 @@ no se ejecuta `openocd`, para que se abra una sesión de GDB y programe el chip 
 
 ## Configurar ../.cargo/config.toml
 
-Ahora que sabe qué debugger va a utilizar, necesitaremos cambiar el archivo `../.cargo/config.toml` para que el comando `cargo run` se
+Ahora que sabe qué debugger va a utilizar, necesitaremos cambiar el archivo `./.cargo/config.toml` para que el comando `cargo run` se
 ejecute correctamente.
 
 > **NOTA** `cargo` es el gestor de paquete de Rust y puedes leer algo sobre él [aquí](https://doc.rust-lang.org/cargo/).
 
-Abramos una terminal y modifiquemos el archivo `../.cargo/config.toml`. Aquí tenemos `arm-none-eabi-gdb` activado para usar (está descomentado). Lo primero,
+Abramos una terminal y modifiquemos el archivo `./.cargo/config.toml`. Aquí tenemos `arm-none-eabi-gdb` activado para usar (está descomentado). Lo primero,
 situarnos en el directorio de nuestro proyecto:
 
 ``` console
 cd ~/embedded-discovery/src/05-led-roulette
 ```
-Luego editamos con `nano` el archivo `../.cargo/config.toml`:
+Luego editamos con `nano` el archivo `./.cargo/config.toml`:
 
 ``` console
-nano ../.cargo/config.toml
+nano ./.cargo/config.toml
 ```
 El archivo debe tener algo parecido a esto:
 ```
@@ -210,9 +210,9 @@ El archivo debe tener algo parecido a esto:
 ## openocd -f interface/stlink.cfg -f target/stm32f3x.cfg
 # depending on your local GDB, pick one of the following
 [target.thumbv7em-none-eabihf]
-#runner = "arm-none-eabi-gdb -q -x ../openocd.gdb"
-# runner = "gdb-multiarch -q -x ../openocd.gdb"
-runner = "gdb -q -x ../openocd.gdb"
+#runner = "arm-none-eabi-gdb -q -x ./openocd.gdb"
+# runner = "gdb-multiarch -q -x ./openocd.gdb"
+runner = "gdb -q -x ./openocd.gdb"
 rustflags = [
   "-C", "link-arg=-Tlink.x",
 ]
@@ -220,6 +220,15 @@ rustflags = [
 [build]
 target = "thumbv7em-none-eabihf"
 ```
+> **NOTA IMPORTANTE** El archivo de configuración "config.toml" y "openocd" a
+> diferencia del proyecto original (f3discorey) están en el direcorio ráiz. Por
+> tanto no podemos usar "../.cargo/config.toml", en su lugar debemos de quitar
+> un nivel, osea quitar un punto (.), quedando "./cargo/config.toml" en su lugar.
+> Lo mismo sucede dentro del archivo "config.toml" ya que hacen referencia a
+> openocd.gdb de forma "../openocd.gdb" y lo bajaremos un nivel, dejándolo en
+> "./openocd.gdb".
+> Más adelante lo volveremos a configurar para el proyecto principal.
+
 Vemos que en esta ocasión, se ha activado el GDB para Fedora. Utilice su GDB para su distro, descomentando el que desea y comentando el que estaba habilitado.
 No se permite tener dos runner activados. Yo no lo haría.
 
