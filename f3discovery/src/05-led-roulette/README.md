@@ -16,11 +16,13 @@ Descargue en su PC este repositorio para mayor comodidad. Para ello, en la image
 [discovery]: https://github.com/rust-embedded/discovery
 
 Vamos a crear un directorio nuevo en su "/home" denominado `05-led-roulette`. Desde el directorio “f3discovery/src” copiamos :
-    • f3discovery/src/.cargo → MiProyecto/05-led-roulette/
-    • f3discovery/src/openocd.gdb → MiProyecto/05-led-roulette/
-    • f3discovery/src/05-led-roulette/Cargo.toml → MiProyecto/05-led-roulette/
-    • f3discovery/src/05-led-roulette/auxiliary → MiProyecto/05-led-roulette/
-    • f3discovery/src/05-led-roulette/src → MiProyecto/05-led-roulette/
+
+     • f3discovery/src/.cargo → MiProyecto/05-led-roulette/
+     • f3discovery/src/openocd.gdb → MiProyecto/05-led-roulette/
+     • f3discovery/src/05-led-roulette/Cargo.toml → MiProyecto/05-led-roulette/
+     • f3discovery/src/05-led-roulette/auxiliary → MiProyecto/05-led-roulette/
+     • f3discovery/src/05-led-roulette/src → MiProyecto/05-led-roulette/
+
 No se preocupe por todo esto, simplemente crear la estructura siguiente con los archivos siguientes cuyos contenidos se detalla a continuación :
 
 ``` text
