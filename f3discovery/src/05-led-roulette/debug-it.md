@@ -116,8 +116,7 @@ Dump of assembler code for function main:
    0x080001ec <+0>:     push    {r7, lr}
    0x080001ee <+2>:     mov     r7, sp
 => 0x080001f0 <+4>:     bl      0x80001f6 <_ZN12led_roulette18__cortex_m_rt_main17he61ef18c060014a5E>
-   0x080001f4 <+8>:     udf     #254    ; 0xfe
-
+  
 End of assembler dump.
 ```
 
