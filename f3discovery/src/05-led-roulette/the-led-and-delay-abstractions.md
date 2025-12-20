@@ -149,7 +149,7 @@ Independientemente de dónde se haya detenido tu programa, siempre puedes consul
 `backtrace`imprimirá un seguimiento de las llamadas a funciones desde la función actual hasta la función principal.
 
 Volvamos al tema. Para lograr lo que queremos, primero debemos regresar a la función main. Podemos hacerlo con el comando 
-`finish`. Este comando reanuda la ejecución del programa y la detiene justo después de que este finaliza su ejecución. Tendremos que llamarlo varias vece
+`finish`. Este comando reanuda la ejecución del programa y la detiene justo después de que este finaliza su ejecución. Tendremos que llamarlo varias veces.
 ```
 (gdb) finish
 Run till exit from #0  0x08003434 in core::ptr::read_volatile<u32> (src=0xe000e010)
