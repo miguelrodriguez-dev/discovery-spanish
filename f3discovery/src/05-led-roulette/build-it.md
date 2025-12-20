@@ -127,4 +127,4 @@ ELF Header:
   Section header string table index: 20
   ```
 
-Los siguiente será programar (flashear) nuestro microcontrolador.
+Los siguiente será programar [flashear](flash-it.md) nuestro microcontrolador.
