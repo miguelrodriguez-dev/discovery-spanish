@@ -140,3 +140,4 @@ led_roulette::__cortex_m_rt_main () at ~/embedded-discovery/src/05-led-roulette/
 ## Haga un FORK de `discovery book`
 
 Si aún no lo has hecho, te recomendamos crear una bifurcación del libro [embedded discovery book](https://github.com/rust-embedded/discovery) para guardar tus cambios en tu propia rama. Sugerimos crear tu propia rama y no modificar la rama principal master para que esta se mantenga sincronizada con el repositorio original. Además, esto te permitirá crear solicitudes PR más fácilmente y mejorar este libro. ¡Gracias de antemano!
+Ahora te presento [mi solución](my-solution.md).
