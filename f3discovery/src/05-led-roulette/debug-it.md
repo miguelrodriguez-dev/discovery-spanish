@@ -1,7 +1,6 @@
 # Depurando
 
-Partimos del supuesto que uste no tiene ejecutando una terminal con `openocd` ni tampoco tiene abierta una sesión de GDB en otra terminal. En caso de que no sea así,
-cierre todoas las sesiones ya que voy a explicar mediante dos métodos, cómo hacer una depuración mediante `cargo build` y otra mediante `cargo run` (con el runner activado).
+Partimos del supuesto que no tiene ejecutando una terminal con `openocd` ni tampoco tiene abierta una sesión de GDB en otra terminal y que el microcontrolador tiene otro programa cargado o bien no tiene ninguno. En caso de que no sea así, cierre todoas las sesiones ya que voy a explicar mediante dos métodos, cómo hacer una depuración cuando el binario ha sido compilado con `cargo build` y otra cuando ha sido compilado con `cargo run` (con el runner activado). Esto se debe principalmente a que cuando se compila con "cargo run" (si se ha configurado bien su ruunner en .cargo/comfig.toml) se crean una serie de pasos dictados por el archivo "openocd.gdb como establecer la conexión GDB con openocd, escribir en el chip, crear break points y saltar hasta el punto de entrada y esto puede provocarno mucha confusión y que las pautas a seguir, no van a coincidir.
 
 # Depurando sin usar "runner"
 Tenemos que tener compilado nuestro proyecto y si noo es así, nos situamos en la raíz de nuestro proyecto (05-led-roulette) y ejecutar el siguiente comando:
