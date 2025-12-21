@@ -1,33 +1,29 @@
 # Type safe manipulation
 
-The last register we were working with, `ODR`, had this in its documentation:
-
+El registro ODR  en su manual indicaba esto:
 > Bits 31:16 Reserved, must be kept at reset value
 
-We are not supposed to write to those bits of the register or Bad Stuff May Happen.
+No debemos escribir en esa zona del registro, o podrían suceder cosas malas.
 
-There's also the fact the registers have different read/write permissions. Some of them are write
-only, others can be read and written to and there must be others that are read only.
+Hay registros que tienen diferentes permisos de lectura/escritura.
 
-Finally, directly working with hexadecimal addresses is error prone. You already saw that trying to
-access an invalid memory address causes an exception which disrupts the execution of our program.
+Trabajar directamente con direcciones hexadecimales es propenso a errores. Se puede producir un error del tipo HARDFAULT osea, 
+por mala dirección o dirección inexistente.
 
-Wouldn't it be nice if we had an API to manipulate registers in a "safe" manner? Ideally, the API
-should encode these three points I've mentioned: No messing around with the actual addresses, should
-respect read/write permissions and should prevent modification of the reserved parts of a register.
+¿Imaginas una API para manipular los registros de forma segura? Idealmente, la API debería tener en su código el no manipular 
+las direcciones reales, respetar los permisos de lectura/escritura y evitar la modificación de las partes reservadas de un registro.
 
-Well, we do! `aux7::init()` actually returns a value that provides a type safe API to manipulate the
-registers of the  `GPIOE` peripheral.
+Pues si, lo tenemos, nuesto `aux7::init()` devuelve un valor que proporciona una API de tipo seguro para manipular los registros del 
+periférico `GPIOE`.
 
-As you may remember: a group of registers associated to a peripheral is called register block, and
-it's located in a contiguous region of memory. In this type safe API each register block is modeled
-as a `struct` where each of its fields represents a register. Each register field is a different
-newtype over e.g. `u32` that exposes a combination of the following methods: `read`, `write` or
-`modify` according to its read/write permissions. Finally, these methods don't take primitive values
-like `u32`, instead they take yet another newtype that can be constructed using the builder pattern
-and that prevent the modification of the reserved parts of the register.
+Como recordará: un grupo de registros asociados a un periférico se llama “registro bloque”, y está localizado en una región contigua de 
+la memoria. En este tipo de API segura, cada registro bloque está modelado como una estructura `struct` donde cada uno de sus campos 
+representa un registro. Cada campo registro es un nuevo tipo diferente (por ejemplo `u32`) que expone una combinación de los siguientes 
+métodos: `read`, `write` o `modify` acorde a sus permisos de escritura/lectura. Esos métodos no toman valores primitivos como los `u32`, 
+en su lugar toman otro nuevo tipo que puede ser construido utilizando el patrón del compilador y eso previene la modificación de áreas 
+reservadas de los registros.
 
-The best way to get familiar with this API is to port our running example to it.
+La mejor manera de familiarizarse con esta API es portando nuestro ejemplo:
 
 ``` rust
 #![no_main]
@@ -56,19 +52,18 @@ fn main() -> ! {
 }
 ```
 
-First thing you notice: There are no magic addresses involved. Instead we use a more human friendly
-way, for example `gpioe.bsrr`, to refer to the `BSRR` register in the `GPIOE` register block.
+Lo primero que notará es que no hay una dirección mágica. En su lugar utilizamos lenguaje más humano, por ejemplo `gpioe.bsrr`, 
+se refiere a que estamos en el registro `BSRR` dentro del bloque registro `GPIOE`.
 
-Then we have this `write` method that takes a closure. If the identity closure (`|w| w`) is used,
-this method will set the register to its *default* (reset) value, the value it had right after the
-microcontroller was powered on / reset. That value is `0x0` for the `BSRR` register. Since we want
-to write a non-zero value to the register, we use builder methods like `bs9` and `br9` to set some
-of the bits of the default value.
+Tenemos un método `write` que toma como argumento un cierre. Si se utiliza el cierre de identidad (`|w|w`), este método restablecerá 
+el registro a su valor predeterminado (reset), el valor que tenía justo después de encender o reiniciar el microcontrolador. Ese valor 
+es `0x0` para el registro `BSRR`. Como queremos escribir un valor distinto de cero en el registro, utilizamos métodos de compilador como 
+`bs9` y `br9` para restablecer algunos bits del valor predeterminado.
 
-Let's run this program! There's some interesting stuff we can do *while* debugging the program.
 
-`gpioe` is a reference to the `GPIOE` register block. `print gpioe` will return the base address of
-the register block.
+¡Ejecutemos este programa! Hay cosas interesantes que podemos hacer *mientras* lo depuramos.
+
+`gpioe` es una referencia al registro bloque `GPIOE`. `print gpioe` devolverá la dirección base de este registro bloque.
 
 ```
 $ cargo run
