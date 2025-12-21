@@ -1,16 +1,16 @@
-# Spooky action at a distance
+# El registro ODR
 
-`BSRR` is not the only register that can control the pins of Port E. The `ODR` register also lets
-you change the value of the pins. Furthermore, `ODR` also lets you retrieve the current output
-status of Port E.
+`BSRR` no es el único registro que puede controlar los pines del Port E. El registro `ODR` también 
+puede acceder y cambiar el valor de los pines. Además, el registro `ODR` al contrario que `BSRR` permite
+la lectura también de sus bits.
 
-`ODR` is documented in:
+`ODR` tiene su propia documentación en:
 
-> Section 11.4.6 GPIO port output data register - Page 239
+> Sección 11.4.6 GPIO port output data register - Página 242
 
-Let's look at this program. The key to this program
-is `fn iprint_odr`. This function prints the current
-value in `ODR` to the `ITM` console
+Echemos un vistazo a este programa. La clave de este programa es 
+`fn iprint_odr`. Esta función nos permite leer y visualizar en pantalla a través 
+de la sesión de ITM el valor de los pines de `ODR`.
 
 ``` rust
 #![no_main]
@@ -66,7 +66,7 @@ fn main() -> ! {
 }
 ```
 
-If you run this program
+Si ejecutamos el programa mediatne "cargo run":
 ```
 $ cargo run
 (..)
@@ -77,7 +77,7 @@ Breakpoint 1, registers::__cortex_m_rt_main_trampoline () at src/07-registers/sr
 Continuing.
 ```
 
-You'll see on itmdump's console:
+Veremos esta salida en la consola de ITM:
 
 ``` console
 $ # itmdump's console
@@ -89,5 +89,7 @@ ODR = 0x0800
 ODR = 0x0000
 ```
 
-Side effects! Although we are reading the same address multiple times without actually modifying it,
-we still see its value change every time `BSRR` is written to.
+Tenemos un efecto colateral, es decir, en este registro ODR puede cambiar sus valores de bits si se escribe en
+el registro BSRR, por lo que, sin modificar el registro ODR vemos que su valor cambia cada vez que se escribe
+en el BSRR.
+Vamos a ls [siguiente sección](type-safe-manipulation.md) para manipular registros de forma segura.
