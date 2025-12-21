@@ -113,3 +113,5 @@ $1 = stm32f30x::gpioc::RegisterBlock {
   }
 }
 ```
+
+Pasemos a la siguiente sección ["power"](power.md).
