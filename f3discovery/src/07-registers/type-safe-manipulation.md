@@ -83,8 +83,12 @@ registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:9
 $1 = (*mut stm32f3::stm32f303::gpioc::RegisterBlock) 0x48001000
 ```
 
-But if we instead `print *gpioe`, we'll get a *full view* of the register block: the value of each
-of its registers will be printed.
+Con el comando `print gpioe` obtenemos la dirección de la referencia que apunta al registro bloque GPIOE.
+
+Pero si queremos saber qué valor hay en esa dirección, nos vamos a encontrar con el valor de todos los registros que cuelgan de este.
+
+Para ello simplemente desreferenciamos la variable `gpioe` con `print *gpioe`.
+
 
 ```
 (gdb) print *gpioe
@@ -180,19 +184,18 @@ $2 = stm32f3::stm32f303::gpioc::RegisterBlock {
 }
 ```
 
-All these newtypes and closures sound like they'd generate large, bloated programs but, if you
-actually compile the program in release mode with [LTO] enabled, you'll see that it produces exactly
-the same instructions that the "unsafe" version that used `write_volatile` and hexadecimal addresses
-did!
+Todos estos nuevos tipos y cierres parecen generar programas grandes e inflados, pero si compilas el 
+programa en modo de lanzamiento con [LTO] habilitado, verás que produce exactamente las mismas 
+instrucciones que la versión "insegura" que usaba `write_volatile` y direcciones hexadecimales.
 
 [LTO]: https://en.wikipedia.org/wiki/Interprocedural_optimization
 
-Use `cargo objdump` to grab the assembler code to `release.txt`:
+Utilice `cargo objdump` para guardar el código ensamblador en un archivo `release.txt`:
 ``` console
 cargo objdump --bin registers --release -- -d --no-show-raw-insn --print-imm-hex > release.txt
 ```
 
-Then search for `main` in `release.txt`
+Buscamos `main` en el archivo recien creado `release.txt`
 ```
 0800023e <main>:
  800023e:      	push	{r7, lr}
