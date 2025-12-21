@@ -1,22 +1,20 @@
-# LEDs, again
+# De nuevo con LEDs
 
-In the last section, I gave you *initialized* (configured) peripherals (I initialized them in
-`aux7::init`). That's why just writing to `BSRR` was enough to control the LEDs. But, peripherals
-are not *initialized* right after the microcontroller boots.
+En la sección anterior, les presenté los periféricos *inicializados* (configurados) (los inicialicé en `aux7::init`). 
+Por eso, escribir en `BSRR` fue suficiente para controlar los LED. Sin embargo, los periféricos no se *inicializan* 
+inmediatamente después del arranque del microcontrolador.
 
-In this section, you'll have more fun with registers. I won't do any initialization and you'll have
-to initialize and configure `GPIOE` pins as digital outputs pins so that you'll be able to drive LEDs
-again.
+En esta sección, les divertirán más con los registros. No realizaré ninguna inicialización y tendrán que inicializar 
+y configurar los pines `GPIOE` como pines de salida digital para poder controlar los LED de nuevo.
 
-This is the starter code.
+Este es el código de inicio.
 
 ``` rust
 {{#include src/main.rs}}
 ```
 
-If you run the starter code, you'll see that nothing happens this time. Furthermore, if you print
-the `GPIOE` register block, you'll see that every register reads as zero even after the
-`gpioe.odr.write` statement was executed!
+Si ejecuta el código de inicio, verá que esta vez no ocurre nada. Además, si imprime el bloque de registros `GPIOE`, verá que 
+todos los registros se leen como cero incluso después de ejecutar la instrucción `gpioe.odr.write`.
 
 ```
 $ cargo run
