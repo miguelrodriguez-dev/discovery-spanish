@@ -1,32 +1,28 @@
 # Power
 
-Turns out that, to save power, most peripherals start in a powered off state -- that's their state
-right after the microcontroller boots.
+Cuando arranca el microcontrolador, los periféricos estan apagados y necesitan inicializarse.
 
-The Reset and Clock Control (`RCC`) peripheral can be used to power on or off every other
-peripheral.
+El periférico de Control de Reinicio y Reloj (`RCC`) puede usarse para encender o apagar todos los demás periféricos.
 
-You can find the list of registers in the `RCC` register block in:
+Puede encontrar tabla de registros en el bloque de registros `RCC` en:
 
-> Section 9.4.14 - RCC register map - Page 166 - Reference Manual
+> Sección 9.4.14 - Mapa de registros RCC - Página 168 - Manual de Referencia
 
-The registers that control the power status of other peripherals are:
+Los registros que controlan el estado de energía de otros periféricos son:
+
 
 - `AHBENR`
 - `APB1ENR`
 - `APB2ENR`
 
-Each bit in these registers controls the power status of a single peripheral, including `GPIOE`.
+Cada bit de estos registros controla el estado de alimentación de un único periférico, incluido el módulo "GPIOE".
 
-Your task in this section is to power on the `GPIOE` peripheral. You'll have to:
+Su tarea en esta sección es encender el periférico "GPIOE". Deberá:
 
-- Figure out which of the three registers I mentioned before has the bit that controls the power
-  status.
-- Figure out what value that bit must be set to,`0` or `1`, to power on the `GPIOE` peripheral.
-- Finally, you'll have to change the starter code to *modify* the right register to turn on the
-  `GPIOE` peripheral.
+- Averigua cuál de los tres registros que mencioné anteriormente tiene el bit que controla el estado de encendido.
+- Averigua en qué valor debe establecerse ese bit, `0` o `1`, para encender el periférico `GPIOE`.
+- Finalmente, tendrás que cambiar el código de inicio para *modificar* el registro correcto y así encender el periférico `GPIOE`.
 
-If you are successful, you'll see that the `gpioe.odr.write` statement will now be able to modify
-the value of the `ODR` register.
+Si lo logras, verás que la instrucción `gpioe.odr.write` ahora podrá modificar el valor del registro `ODR`.
 
-Note that this won't be enough to actually turn on the LEDs.
+Ten en cuenta que esto no será suficiente para encender los LED.
