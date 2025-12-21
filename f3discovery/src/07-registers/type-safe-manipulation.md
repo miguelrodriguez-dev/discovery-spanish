@@ -220,11 +220,6 @@ Buscamos `main` en el archivo recien creado `release.txt`
  8000270:      	b	#-0x4 <registers::__cortex_m_rt_main::h199f1359501d5c71+0x28>
 ```
 
-The best part of all this is that nobody had to write a single line of code to implement the
-GPIOE API. All the code was automatically generated from a System View Description (SVD) file using the
-[svd2rust] tool. This SVD file is actually an XML file that microcontroller vendors provide and that
-contains the register maps of their microcontrollers. The file contains the layout of register
-blocks, the base addresses, the read/write permissions of each register, the layout of the
-registers, whether a register has reserved bits and lots of other useful information.
+Lo mejor de todo es que nadie tuvo que escribir ni una sola línea de código para implementar la API GPIOE. Todo el código se generó automáticamente a partir de un archivo de Descripción de Vista del Sistema (SVD) mediante la herramienta [svd2rust]. Este archivo SVD es, en realidad, un archivo XML proporcionado por los fabricantes de microcontroladores que contiene los mapas de registros de sus microcontroladores. El archivo contiene la disposición de los bloques de registros, las direcciones base, los permisos de lectura/escritura de cada registro, la disposición de los registros, si un registro tiene bits reservados y mucha otra información útil.
 
 [svd2rust]: https://crates.io/crates/svd2rust
