@@ -14,3 +14,4 @@ Su tarea en esta sección es actualizar el código de inicio para configurar los
 - Lea la documentación para comprender la función de los bits del registro `MODER`. - Modifique el registro `MODER` para configurar los pines como salidas digitales.
 
 Si la operación es correcta, verá que los 8 LED se encienden al ejecutar el programa.
+Puede ir a la [solución](the-solution.md).
