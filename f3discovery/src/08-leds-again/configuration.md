@@ -1,4 +1,4 @@
-# Configuration
+# Configuración
 
 Tras encender el periférico GPIOE, aún es necesario configurarlo. En este caso, queremos que los pines se configuren como *salidas* digitales para que puedan controlar los LED; por defecto, la mayoría de los pines se configuran como *entradas* digitales.
 
