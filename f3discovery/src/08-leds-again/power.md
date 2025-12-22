@@ -26,3 +26,4 @@ Su tarea en esta sección es encender el periférico "GPIOE". Deberá:
 Si lo logras, verás que la instrucción `gpioe.odr.write` ahora podrá modificar el valor del registro `ODR`.
 
 Ten en cuenta que esto no será suficiente para encender los LED.
+Vayamos a la [siguiente sección](configuration.md).
