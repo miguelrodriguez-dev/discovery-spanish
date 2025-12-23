@@ -15,10 +15,8 @@ La implementación mostrada está mal porque siempre se genera el mismo retardo 
 En esta sección, tendrá que:
 
 - Corregir la función `delay` para generar retardos proporcionales al valor de entrada `ms`.
-- Tendrá que ajustar la función `delay` para hacer que la ruleta LED gire a una velocidad de aproximadamente 5 ciclos
-- en 4 segundos (período de 800 milisegundos).
-- El procesador dentro del microcontrolador tiene una velocidad de reloj de 72 MHz y ejecuta la mayoría de las instrucciones
-- en un cilco de su reloj, ¿Cuántos bucles `for` crees que debe realizar la función `delay` para generar un retraso de 1 segundo?
-- ¿Cuántos bucles `for` realiza realmente `delay(1000)`?
+- Tendrá que ajustar la función `delay` para hacer que la ruleta LED gire a una velocidad de aproximadamente 5 ciclos en 4 segundos (período de 800 milisegundos).
+- El procesador dentro del microcontrolador tiene una velocidad de reloj de 72 MHz y ejecuta la mayoría de las instrucciones en un cilco de su reloj, ¿Cuántos bucles `for` crees que debe realizar la función `delay` para generar un retraso de 1 segundo?.
+- ¿Cuántos bucles `for` realiza realmente `delay(1000)`?.
 - ¿Qué sucede si compilas tu programa en modo de lanzamiento y lo ejecutas?
 Sigamos en la [siguiente sección](nop.md).
