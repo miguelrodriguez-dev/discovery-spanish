@@ -1,16 +1,12 @@
 # NOP
 
-If in the previous section you compiled the program in release mode and actually looked at the
-disassembly, you probably noticed that the `delay` function is optimized away and never gets called
-from within `main`.
+Si en la sección anterior compilaste el programa en modo de lanzamiento y revisaste el desensamblado, probablemente notaste que la función `delay` está optimizada y nunca se llama desde `main`.
 
-LLVM decided that the function wasn't doing anything worthwhile and just removed it.
+LLVM decidió que la función no hacía nada útil y simplemente la eliminó.
 
-There is a way to prevent LLVM from optimizing the `for` loop delay: add a *volatile* assembly
-instruction. Any instruction will do but NOP (No OPeration) is a particular good choice in this case
-because it has no side effect.
+Hay una manera de evitar que LLVM optimice el retardo del bucle `for`: agregar una instrucción de ensamblaje *volatile*. Cualquier instrucción servirá, pero `NOP` (sin operación) es una opción especialmente buena en este caso, ya que no tiene efectos secundarios.
 
-Your `for` loop delay would become:
+El retardo del bucle `for` se convertiría en:
 
 ``` rust
 #[inline(never)]
@@ -22,7 +18,7 @@ fn delay(_tim6: &tim6::RegisterBlock, ms: u16) {
 }
 ```
 
-And this time `delay` won't be compiled away by LLVM when you compile your program in release mode:
+Ahora, `delay` no se compilará de nuevo por LLVM cuando compiles el programa en modo `release` :
 
 ``` console
 $ cargo objdump --bin clocks-and-timers --release -- -d --no-show-raw-insn
@@ -40,6 +36,4 @@ clocks_and_timers::delay::h711ce9bd68a6328f:
  8000198:       pop     {r4, r5, r7, pc}
 ```
 
-Now, test this: Compile the program in debug mode and run it, then compile the program in release
-mode and run it. What's the difference between them? What do you think is the main cause of the
-difference? Can you think of a way to make them equivalent or at least more similar again?
+Ahora, prueba esto: compila el programa en modo de depuración y ejecútalo, luego compila el programa en modo de lanzamiento y ejecútalo. ¿Cuál es la diferencia entre ellos? ¿Cuál crees que es la causa principal de la diferencia? ¿Se te ocurre alguna manera de hacerlos equivalentes o al menos más similares?
