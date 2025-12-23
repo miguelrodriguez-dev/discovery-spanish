@@ -37,3 +37,4 @@ clocks_and_timers::delay::h711ce9bd68a6328f:
 ```
 
 Ahora, prueba esto: compila el programa en modo de depuración y ejecútalo, luego compila el programa en modo de lanzamiento y ejecútalo. ¿Cuál es la diferencia entre ellos? ¿Cuál crees que es la causa principal de la diferencia? ¿Se te ocurre alguna manera de hacerlos equivalentes o al menos más similares?
+Y por fin, vamos a ver los [temporizadores](one-shot-timer.md).
