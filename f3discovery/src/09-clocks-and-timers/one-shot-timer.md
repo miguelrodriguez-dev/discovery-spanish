@@ -1,25 +1,19 @@
-# One-shot timer
+# Temporizadores
+Espero haberlos convencido de que los retardos de bucle `for` son una mala manera de implementarlos.
 
-I hope that, by now, I have convinced you that `for` loop delays are a poor way to implement delays.
+Ahora, implementaremos los retardos usando un temporizador de hardware. La función básica de un temporizador de hardware es... controlar el tiempo con precisión. Un temporizador es otro periférico disponible para el microcontrolador; por lo tanto, se puede controlar mediante registros.
 
-Now, we'll implement delays using a *hardware timer*. The basic function of a (hardware) timer is
-... to keep precise track of time. A timer is yet another peripheral that's available to the
-microcontroller; thus it can be controlled using registers.
+El microcontrolador que usamos tiene varios temporizadores (de hecho, más de 10) de diferentes tipos (básicos, de propósito general y avanzados). Algunos temporizadores tienen mayor resolución (número de bits) que otros y algunos pueden usarse para algo más que simplemente controlar el tiempo.
 
-The microcontroller we are using has several (in fact, more than 10) timers of different kinds
-(basic, general purpose, and advanced timers) available to it. Some timers have more *resolution*
-(number of bits) than others and some can be used for more than just keeping track of time.
+Usaremos uno de los temporizadores básicos: `TIM6`. Este es uno de los temporizadores más simples disponibles en nuestro microcontrolador. La documentación de los temporizadores básicos se encuentra en la siguiente sección:
 
-We'll be using one of the *basic* timers: `TIM6`. This is one of the simplest timers available in
-our microcontroller. The documentation for basic timers is in the following section:
+> Sección 22 Temporizadores - Página 670 - Manual de Referencia
 
-> Section 22 Timers - Page 670 - Reference Manual
+Sus registros se documentan en:
 
-Its registers are documented in:
+> Sección 22.4.9 Mapa de registros TIM6/TIM7 - Página 682 - Manual de Referencia
 
-> Section 22.4.9 TIM6/TIM7 register map - Page 682 - Reference Manual
-
-The registers we'll be using in this section are:
+Los registros que utilizaremos en esta sección son:
 
 - `SR`, the status register.
 - `EGR`, the event generation register.
@@ -27,22 +21,17 @@ The registers we'll be using in this section are:
 - `PSC`, the prescaler register.
 - `ARR`, the autoreload register.
 
-We'll be using the timer as a *one-shot* timer. It will sort of work like an alarm clock. We'll set
-the timer to go off after some amount of time and then we'll wait until the timer goes off. The
-documentation refers to this mode of operation as *one pulse mode*.
 
-Here's a description of how a basic timer works when configured in one pulse mode:
+Usaremos el temporizador como un temporizador de un solo disparo o bien el denominado *one-shot timer*. Funcionará como un despertador. Lo programaremos para que suene después de un tiempo y luego esperaremos hasta que suene. La documentación se refiere a este modo de funcionamiento como "modo de un pulso" o en inglés *one pulse mode*.
 
-- The counter is enabled by the user (`CR1.CEN = 1`).
-- The `CNT` register resets its value to zero and, on each tick, its value gets incremented by one.
-- Once the `CNT` register has reached the value of the `ARR` register, the counter will be disabled
-  by hardware (`CR1.CEN = 0`) and an *update event* will be raised (`SR.UIF = 1`).
+A continuación, se describe cómo funciona un temporizador básico configurado en modo de un pulso:
 
-`TIM6` is driven by the APB1 clock, whose frequency doesn't have to necessarily match the processor
-frequency. That is, the APB1 clock could be running faster or slower. The default, however, is that
-both APB1 and the processor are clocked at 8 MHz.
+- El contador es habilitado por el usuario (`CR1.CEN = 1`).
+- El registro `CNT` restablece su valor a cero y, con cada tic, su valor se incrementa en uno (contador).
+- Una vez que el registro `CNT` alcanza el valor del registro `ARR`, el contador se deshabilita por hardware (`CR1.CEN = 0`) y se genera un evento de actualización (`SR.UIF = 1`).
 
-The tick mentioned in the functional description of the one pulse mode is *not* the same as one
-tick of the APB1 clock. The `CNT` register increases at a frequency of `apb1 / (psc + 1)`
-times per second, where `apb1` is the frequency of the APB1 clock and `psc` is the value of the
-prescaler register, `PSC`.
+`TIM6` está controlado por el reloj APB1, cuya frecuencia no tiene por qué coincidir necesariamente con la frecuencia del procesador. Es decir, el reloj APB1 podría funcionar más rápido o más lento. Sin embargo, por defecto, tanto APB1 como el procesador tienen una velocidad de reloj de 8 MHz.
+
+El tictac mencionado en la descripción funcional del modo de un pulso *no* es lo mismo que un tictac del reloj APB1. El registro `CNT` aumenta a una frecuencia de `apb1 / (psc + 1)` veces por segundo, donde `apb1` es la frecuencia del reloj APB1 y `psc` es el valor del registro del preescalador, `PSC`.
+
+Pasamos ahora a la [inicialización](initialization.md).
