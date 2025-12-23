@@ -1,10 +1,10 @@
-# Clocks and timers
+# Relojes y temporizadores
 
-In this section, we'll re-implement the LED roulette application. I'm going to give you back the
-`Led` abstraction but this time I'm going to take away the `Delay` abstraction `:-)`.
+En esta sección volveremos a nuestra LED routlette que hicimos anteriomente, pero en esta ocasión,
+utilizaremos un retarda con `Delay`.
 
-Here's the starter code. The `delay` function is unimplemented so if you run this program the LEDs
-will blink so fast that they'll appear to always be on.
+En el código siguiente, podemos ver que la función `delay` no está implementada y por esa razón los
+LED va a parpadear muy rápido, tanto que parece una luz fija.
 
 ``` rust
 {{#include src/main.rs}}
