@@ -1,56 +1,42 @@
 # Windows tooling
 
-Start by unplugging your discovery board.
+Comience por desconectar la placa Discovery.
 
-Before plugging the discovery board or the serial module, run the following command on
-the terminal:
+Antes de conectar la placa Discovery o el módulo serie, ejecute el siguiente comando en la terminal:
 
 ``` console
 $ mode
 ```
 
-It will print a list of devices that are connected to your computer. The ones that start with `COM` in
-their names are serial devices. This is the kind of device we'll be working with. Take note of all
-the `COM` *ports* `mode` outputs *before* plugging the serial module.
+Imprimirá una lista de los dispositivos conectados a su ordenador. Los que empiezan por "COM" en sus nombres son dispositivos serie. Este es el tipo de dispositivo con el que trabajaremos. Anote todos los puertos COM que muestra `mode` *antes* de conectar el módulo serie.
 
-Now, plug the discovery board and run the `mode` command again. If you see a new
-`COM` port appear on the list then you have a newer revision of the discovery
-and that's the COM port assigned to the serial functionality on the discovery.
-You can skip the next paragraph.
+Ahora, conecte la placa Discovery y ejecute el comando `mode` de nuevo. Si ve que aparece un nuevo puerto COM en la lista, significa que tiene una versión más reciente del Discovery, y ese es el puerto COM asignado a la funcionalidad serie.
+Puede omitir el siguiente párrafo.
 
-If you didn't get a new COM port then you probably have an older revision of the
-discovery. Now plug the serial module; you should see new COM port appear;
-that's the COM port of the serial module.
-
-Now launch `putty`. A GUI will pop out.
+Si no ha obtenido un nuevo puerto COM, probablemente tenga una versión anterior del Discovery. Ahora conecte el módulo serie; debería aparecer un nuevo puerto COM; ese es el puerto COM del módulo serie. Ahora, inicia `putty`. Aparecerá una interfaz gráfica de usuario.
 
 <p align="center">
 <img title="PuTTY settings" src="../assets/putty-session-choose-serial.png">
 </p>
 
-On the starter screen, which should have the "Session" category open, pick "Serial" as the
-"Connection type". On the "Serial line" field enter the `COM` device you got on the previous step,
-for example `COM3`.
+En la pantalla de inicio, donde debería estar abierta la categoría "Sesión", selecciona "Serie" como "Tipo de conexión". En el campo "Línea serie", introduce el dispositivo `COM` que obtuviste en el paso anterior, por ejemplo, `COM3`.
 
 <p align="center">
 <img title="PuTTY settings" src="../assets/putty-settings.png">
 </p>
 
-Next, pick the "Connection/Serial" category from the menu on the left. On this new view, make sure
-that the serial port is configured as follows:
+A continuación, selecciona la categoría "Conexión/Serie" en el menú de la izquierda. En esta nueva vista, asegúrese de que el puerto serie esté configurado de la siguiente manera:
 
-- "Speed (baud)": 115200
-- "Data bits": 8
-- "Stop bits": 1
-- "Parity": None
-- "Flow control": None
+- "Velocidad (baud)": 115200
+- "Bits de datos": 8
+- "Bits de parada": 1
+- "Paridad": Ninguna
+- "Control de flujo": Ninguno
 
-Finally, click the Open button. A console will show up now:
+Finalmente, haga clic en el botón Abrir. Aparecerá una consola:
 
 <p align="center">
 <img title="PuTTY console" src="../assets/putty-console.png">
 </p>
 
-If you type on this console, the TX (red) LED on the Serial module should blink. Each key stroke
-should make the LED blink once. Note that the console won't echo back what you type so the screen
-will remain blank.
+Si escribe en esta consola, el LED TX (rojo) del módulo serie debería parpadear. Cada pulsación de tecla debería hacer que el LED parpadee una vez. Tenga en cuenta que la consola no repetirá lo que escriba, por lo que la pantalla permanecerá en blanco.
