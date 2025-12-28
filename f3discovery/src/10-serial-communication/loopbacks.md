@@ -1,49 +1,40 @@
 # Loopbacks
 
-We've tested sending data. It's time to test receiving it. Except that there's no other device that
-can send us some data ... or is there?
+Hemos probado el envío de datos. Es hora de probar la recepción. Solo que no hay otro dispositivo que pueda enviarnos datos... ¿o sí?
 
-Enter: loopbacks
+Introduce: loopbacks
 
 <p align="center">
 <img title="Serial module loopback" src="../assets/serial-loopback.png">
 </p>
 
-You can send data to yourself! Not very useful in production but very useful for debugging.
+¡Puedes enviarte datos a ti mismo! No es muy útil en producción, pero sí para la depuración.
 
-## Older board revision / external serial module
+## Revisión de placa anterior / módulo serie externo
 
-Connect the `TXO` and the `RXI` pins of the serial module together using a male to male jumper wire
-as shown above.
+Conecta los pines TXO y RXI del módulo serie con un cable puente macho a macho, como se muestra arriba.
 
-Now enter some text into minicom/PuTTY and observe. What happens?
+Ahora introduce texto en minicom/PuTTY y observa. ¿Qué sucede?
 
-You should see three things:
+Deberías ver tres cosas:
 
-- As before, the TX (red) LED blinks on each key press.
-- But now the RX (green) LED blinks on each key press as well! This indicates that the serial module
-  is receiving some data; the one it just sent.
-- Finally, on the minicom/PuTTY console, you should see that what you type echoes back to the
-  console.
+- Como antes, el LED TX (rojo) parpadea con cada pulsación de tecla.
+- ¡Pero ahora el LED RX (verde) también parpadea con cada pulsación de tecla! Esto indica que el módulo serie está recibiendo datos. El que acaba de enviar.
 
-## Newer board revision
+- Finalmente, en la consola minicom/PuTTY, deberías ver que lo que escribes se refleja en la consola.
 
-If you have a newer revision of the board you can set up a loopback by shorting
-the PC4 and PC5 pins using a female to female jumper wire, like [you did for the
-SWO pin](../06-hello-world/index.html).
+## Revisión de placa más reciente
 
-You should now be able to send data to yourself.
+Si tienes una revisión de placa más reciente, puedes configurar un bucle cortocircuitando los pines PC4 y PC5 con un cable puente hembra a hembra, como hiciste para el pin SWO.
 
-Now try to enter some text into minicom/PuTTY and observe.
+Ahora deberías poder enviarte datos a ti mismo.
 
-> **NOTE**: To rule out the possibility of the existing firmware doing weird
-> things to the serial pins (PC4 and PC5) we recommend *holding* the reset
-> button while you enter text into minicom/PuTTY.
+Ahora intenta introducir texto en minicom/PuTTY y observa.
 
-If all is working you should see what you type echoed back to minicom/PuTTY
-console.
+> **NOTA**: Para descartar que el firmware existente tenga algún comportamiento extraño en los pines serie (PC4 y PC5), recomendamos mantener pulsado el botón de reinicio mientras introduces texto en minicom/PuTTY.
+
+Si todo funciona correctamente, deberías ver que lo que escribes se refleja en la consola minicom/PuTTY.
 
 ---
 
-Now that you are familiar with sending and receiving data over serial port using minicom/PuTTY,
-let's make your microcontroller and your computer talk!
+Ahora que ya estás familiarizado con el envío y la recepción de datos a través del puerto serie usando minicom/PuTTY, ¡hagamos que tu microcontrolador y tu computadora se comuniquen!
