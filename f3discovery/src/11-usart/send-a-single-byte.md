@@ -1,4 +1,4 @@
-# Send a single byte
+# Enviar un solo byte desde el microcontrolador al PC
 
 Nuestra primera tarea será enviar un byte desde el microcontrolador al ordenador a través de la conexión serie.
 
