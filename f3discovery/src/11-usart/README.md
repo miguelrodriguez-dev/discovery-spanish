@@ -1,68 +1,54 @@
 # USART
 
-The microcontroller has a peripheral called USART, which stands for Universal
-Synchronous/Asynchronous Receiver/Transmitter. This peripheral can be configured to work with
-several communication protocols like the serial communication protocol.
+El microcontrolador tiene un periférico llamado USART, que significa Receptor/Transmisor Universal Síncrono/Asincrónico. Este periférico puede configurarse para funcionar con varios protocolos de comunicación, como el protocolo de comunicación serie.
 
-Throughout this chapter, we'll use serial communication to exchange information between the
-microcontroller and your computer. But before we do that we have to wire up everything.
+A lo largo de este capítulo, utilizaremos la comunicación serie para intercambiar información entre el microcontrolador y el ordenador. Pero antes de hacerlo, debemos cablear todo.
 
-I mentioned before that this protocol involves two data lines: TX and RX. TX stands for transmitter
-and RX stands for receiver. Transmitter and receiver are relative terms though; which line is the
-transmitter and which line is the receiver depends from which side of the communication you are
-looking at the lines.
+Mencioné anteriormente que este protocolo implica dos líneas de datos: TX y RX. TX significa transmisor y RX significa receptor. Sin embargo, transmisor y receptor son términos relativos; qué línea es el transmisor y cuál es el receptor depende del lado de la comunicación desde el que se miren las líneas.
 
-### Newer board revisions
+### Nuevas revisiones de la placa
 
-If you have a newer revision of the board and are using the on-board USB <->
-Serial functionality then the `auxiliary` crate will set pin `PC4` as the TX
-line and pin `PC5` as the RX line.
+Si tiene una versión más reciente de la placa y utiliza la funcionalidad USB <-> Serie integrada, el crate `auxiliar` establecerá el pin `PC4` como línea `TX` y el pin `PC5` como línea `RX`.
 
-If you had previously connected the PC4 and PC4 pins in order to test the [loopback functionality](../10-serial-communication/loopbacks.md) in the previous section,
-make sure to remove that wire, or the upcoming serial communication will fail silently.
+Si ya había conectado los pines PC4 y PC5 para probar la [funcionalidad de bucle invertido](../10-serial-communication/loopbacks.md) en la sección anterior, asegúrese de desconectar ese cable; de ​​lo contrario, la comunicación serie que se establezca fallará silenciosamente.
 
-Everything is already wired on the board so you don't need to wire anything yourself.
-You can move on to the [next section](send-a-single-byte.html).
+Todo está cableado en la placa, así que no necesita cablear nada usted mismo.
+Puede pasar a la [siguiente sección](send-a-single-byte.html).
 
-### Older board revisions / external serial module
+### Revisiones anteriores de la placa / módulo serie externo
 
-If you are using an external USB <-> Serial module then you will **need** to
-enable the `adapter` feature of the `aux11` crate dependency in `Cargo.toml`.
+Si utiliza un módulo USB <-> serie externo, **necesitará** habilitar la función `adaptador` de la dependencia del crate `aux11` en `Cargo.toml`.
 
 ``` toml
 [dependencies.aux11]
 path = "auxiliary"
-# enable this if you are going to use an external serial adapter
-features = ["adapter"] # <- uncomment this
+# Habilite esta opción si va a usar un adaptador serial externo
+features = ["adapter"] # <- descomente esto
 ```
 
-We'll be using the pin `PA9` as the microcontroller's TX line and `PA10` as its RX line. In other
-words, the pin `PA9` outputs data onto its wire whereas the pin `PA10` listens for data on its
-wire.
+Usaremos el pin `PA9` como la línea TX del microcontrolador y el `PA10` como su línea RX. En otras palabras, el pin `PA9` envía datos a su cable, mientras que el pin `PA10` los recibe.
 
-We could have used a different pair of pins as the TX and RX pins. There's a table in page 44 of the
-[Data Sheet] that list all the other possible pins we could have used.
+Podríamos haber usado un par de pines diferente para TX y RX. Hay una tabla en la página 44 de la [Hoja de datos] que enumera todos los demás pines posibles que podríamos haber usado.
 
-[Data Sheet]: http://www.st.com/resource/en/datasheet/stm32f303vc.pdf
+[Hoja de datos]: http://www.st.com/resource/en/datasheet/stm32f303vc.pdf
 
-The serial module also has TX and RX pins. We'll have to *cross* these pins: that is connect the
-microcontroller's TX pin to the serial module's RX pin and the micro's RX pin to the serial module's
-TX pin. The wiring diagram below shows all the necessary connections.
+El módulo serial también tiene pines TX y RX. Tendremos que *cruzar* estos pines: es decir, conectar el pin TX del microcontrolador al pin RX del módulo serie y el pin RX del microcontrolador al pin TX del módulo serie. El diagrama de cableado a continuación muestra todas las conexiones necesarias.
 
 <p align="center">
-<img height=640 title="F3 <-> Serial connection" src="../assets/f3-serial.png">
+<img height=640 title="F3 <-> Conexión serie" src="../assets/f3-serial.png">
 </p>
 
-These are the recommended steps to connect the microcontroller and the serial module:
+Estos son los pasos recomendados para conectar el microcontrolador y el módulo serie:
 
-- Close OpenOCD and `itmdump`
-- Disconnect the USB cables from the F3 and the serial module.
-- Connect one of F3 GND pins to the GND pin of the serial module using a female to male (F/M) wire.
-  Preferably, a black one.
-- Connect the PA9 pin on the back of the F3 to the RXI pin of the serial module using a F/M wire.
-- Connect the PA10 pin on the back of the F3 to the TXO pin of the serial module using a F/M wire.
-- Now connect the USB cable to the F3.
-- Finally connect the USB cable to the Serial module.
-- Re-launch OpenOCD and `itmdump`
+- Cierre OpenOCD e itmdump.
+- Desconecte los cables USB del F3 y del módulo serie.
+- Conecte uno de los pines GND del F3 al pin GND del módulo serie con un cable hembra a macho (F/M).
+Preferiblemente, uno negro.
+- Conecte el pin PA9 de la parte posterior del F3 al pin RXI del módulo serie con un cable F/M. - Conecte el pin PA10 de la parte posterior del F3 al pin TXO del módulo serie con un cable F/M.
+- Ahora conecte el cable USB al F3.
+- Finalmente, conecte el cable USB al módulo serie.
+- Reinicie OpenOCD y ejecute `itmdump`.
 
-Everything's wired up! Let's proceed to send data back and forth.
+¡Todo listo! Procedamos a enviar los datos.
+
+ng's wired up! Let's proceed to send data back and forth.
