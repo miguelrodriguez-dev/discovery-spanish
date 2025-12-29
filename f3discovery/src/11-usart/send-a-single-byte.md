@@ -1,20 +1,15 @@
 # Send a single byte
 
-Our first task will be to send a single byte from the microcontroller to the computer over the serial
-connection.
+Nuestra primera tarea será enviar un byte desde el microcontrolador al ordenador a través de la conexión serie.
 
-This time, I'm going to provide you with an already initialized USART peripheral. You'll only have
-to work with the registers that are in charge of sending and receiving data.
+En esta ocasión, les proporcionaré un periférico USART ya inicializado. Solo tendrán que trabajar con los registros encargados de enviar y recibir datos.
 
-Go into the `11-usart` directory and let's run the starter code therein. Make sure that you have
-minicom/PuTTY open.
+Vayan al directorio `11-usart` y ejecutemos el código de inicio. Asegúrese de tener abierto minicom/PuTTY.
 
 ``` rust
 {{#include src/main.rs}}
 ```
 
-This program writes to the `TDR` register. This causes the `USART` peripheral to send one byte of
-information through the serial interface.
+Este programa escribe en el registro `TDR`. Esto hace que el periférico `USART` envíe un byte de información a través de la interfaz serie.
 
-On the receiving end, your computer, you should see show the character `X` appear on minicom/PuTTY's
-terminal.
+En el extremo receptor, su ordenador, deberían ver aparecer el carácter `X` en la terminal de minicom/PuTTY.
