@@ -1,14 +1,13 @@
-# Send a string
+# Enviar una cadena
 
-The next task will be to send a whole string from the microcontroller to your computer.
+La siguiente tarea será enviar una cadena completa desde el microcontrolador a tu ordenador.
 
-I want you to send the string `"The quick brown fox jumps over the lazy dog."` from the microcontroller to
-your computer.
+Quiero que envíes la cadena `"El rápido zorro marrón salta sobre el perro perezoso."` desde el microcontrolador a tu ordenador.
 
-It's your turn to write the program.
+Te toca escribir el programa.
 
-Execute your program inside the debugger, statement by statement. What do you see?
+Ejecuta tu programa dentro del depurador, instrucción por instrucción. ¿Qué ves?
 
-Then execute the program again but in *one go* using the `continue` command. What happens this time?
+Luego, vuelve a ejecutar el programa, pero de una sola vez, usando el comando `continue`. ¿Qué sucede esta vez?
 
-Finally, build the program in *release* mode and, again, run it in one go. What happens this time?
+Finalmente, compila el programa en modo `release` y, de nuevo, ejecútalo de una sola vez. ¿Qué sucede esta vez?
