@@ -5,7 +5,7 @@
 Con las revisiones más recientes, si conecta la placa Discovery a su ordenador, debería ver aparecer un nuevo dispositivo TTY en `/dev`.
 Para saber cuál es su dispositivo serie, desconectas la placa Discovery y ejecutas:
 ```console
-do dmesg | tail | grep -i tty
+sudo dmesg | tail | grep -i tty
 
 ```
 No debería de aparecer nada, a no ser que tengas otro dispositvo serie conectado a tu pc.
@@ -95,9 +95,9 @@ Esto le indica a `minicom` que abra el dispositivo serie en `/dev/ttyACM0` y est
 
 ## Comandos de `minicom`
 
-`minicom` expone comandos mediante atajos de teclado. En Linux, los atajos empiezan con `Ctrl+A`. En Mac, los atajos empiezan con la tecla `Meta`. Algunos comandos útiles a continuación:
+`minicom` expone comandos mediante atajos de teclado. En Linux, los atajos empiezan con `Ctrl+A` ( los dos se pulsan a la vez, se suelta y presionamos otra tecla de comandos). En Mac, los atajos empiezan con la tecla `Meta`. Algunos comandos útiles a continuación:
 
-- `Ctrl+A` + `Z`. Resumen de comandos de Minicom
+- `Ctrl+A` + `Z`. Resumen de comandos de Minicom ( CTRL y a pulsados a la vez, y luego se sueltan y pulsamos z)
 - `Ctrl+A` + `C`. Limpiar la pantalla
 - `Ctrl+A` + `X`. Salir y reiniciar
 - `Ctrl+A` + `Q`. Salir sin reiniciar
